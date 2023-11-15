@@ -1,13 +1,6 @@
 <?php
 include 'config.php';
 class dlogin extends config{
-		
-		private $uname;
-		private $upass;
-		public function __construct($name,$pass){
-			$this->uname=$name;
-			$this->upass=$pass;
-		}
 
 		public function login(){
 			//Creates connection to database
@@ -15,12 +8,15 @@ class dlogin extends config{
 			if($connection->connect_error){
 				die("Connection failed: ".$connection->connect_error);
 			}
+
+			$uname = $_POST['uname'];
+			$upass = $_POST['upass'];
 			//Creates session for session variables
 			session_start();
 			$_SESSION["err"] = false;
 			
 			//Select query for databse from user table
-			$sql = "SELECT * FROM users WHERE uname = '$this->uname'";
+			$sql = "SELECT Upass FROM Users WHERE uname = '$uname'";
 			$result = $connection->query($sql);
 
 			//Test weather user exists
@@ -33,7 +29,7 @@ class dlogin extends config{
 
 			//Test if password is correct for user
 			$row = $result->fetch_assoc();
-			if($row['upass'] == $this->upass){
+			if($row['upass'] == $upass){
 				$_SESSION["uid"] = $row["id"];
 				$_SESSION["uname"] = $row["uname"];
 			}else{
@@ -43,7 +39,7 @@ class dlogin extends config{
 
 			$connection->close();
 			//redirect to different page after login
-			header("Location: index.php");
+			header("Location: main.php");
 		}
 
 		public function createUser(){
@@ -51,15 +47,18 @@ class dlogin extends config{
 		$connection = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
 
 		//Insert query for database to user table
-		$sql = "INSERT INTO users (uname, upass, emailAddress) VALUES (
-			'{$connection->real_escape_string($this->uname)}',
-			'{$connection->real_escape_string($this->upass)}',
-			'{$connection->real_escape_string($_POST['email'])}')";
+		$sql = "INSERT INTO Users (Fname, Lname, Username, Upass, Funds, Address, Birthday, Email) VALUES (
+			'{$connection->real_escape_string($_POST['Fname'])}',
+			'{$connection->real_escape_string($_POST['Lname'])}',
+			'{$connection->real_escape_string($_POST['Email'])}',
+			'{$connection->real_escape_string($_POST['Uname'])}',
+			{0},
+			'{$connection->real_escape_string($_POST['Email'])}')";
 			$insert = $connection->query($sql);
 			$connection->close();
 
 			//redirect to login page after account is created
-			header("Location: login.php");
+			header("Location: index.php");
 		}
 	}
 ?>

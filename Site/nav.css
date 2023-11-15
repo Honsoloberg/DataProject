@@ -1,0 +1,113 @@
+﻿* {
+    margin:0;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/*Header Style Rules Section START*/
+.header {
+    background-color: rgb(164, 155, 155);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    /* animation: fadeInAnimation ease-out 1s; */
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+}
+
+/*MyKia title in the header*/
+.headerTitle{
+    font-size: 60px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 5px;
+    text-decoration: none;
+}
+
+/*Header Style Section END*/
+
+/*NavBar Style Rules Section START*/
+.navBar {
+    height: 10vh;
+    width: 100%;
+}
+
+.navList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black;
+    position: sticky;
+    top: 0;
+    width: 100%;
+}
+
+.navItems {
+    float: left;
+}
+
+.navItems a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 24px;
+    font-family: "Lucida Console", "Courier New", monospace;
+ }
+
+.navItems a:hover {
+    background-color: gray;
+
+    animation: fadeInAnimation ease 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+ }
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0.25;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#loginBut {
+    float: right;
+}
+/*NavBar Style Section END*/
+
+.dropdown{
+    text-align: center;
+   }
+
+
+/*FooterBar Style Rules Section START*/
+.footerBar {
+    border-top: 8px solid rgb(32, 32, 32);
+    line-height: 50px;
+    /* padding: 60px; */
+    height: 300px;
+    width: 100%;
+    /* background-color: lightgray; */
+    margin-top: 80px;
+}
+.insideFooter{
+    padding: 60px;
+    padding-left: 100px;
+    padding-top: 0px;
+    background-color: rgb(164, 155, 155);
+}
+
+.insideFooterTitle{
+    /* background-color: black;
+    color:white; */
+    background-color: rgb(164, 155, 155);
+    padding: 60px;
+    padding-bottom: 20px;
+    font-size: 20px;
+    text-decoration:underline;
+}
+/*FooterBar Style Section END*/

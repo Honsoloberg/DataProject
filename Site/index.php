@@ -1,6 +1,8 @@
 <?php
-if(!empty($_SESSION["uname"])){
-    header("Location: ???????"); //Fill with the primary page
+include 'dlogin.php';
+$account = new dlogin();
+if(!empty($_POST)){
+    $account->login();
 }
 ?>
 
