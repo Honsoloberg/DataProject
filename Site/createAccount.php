@@ -74,8 +74,8 @@ if(!empty($_POST)){
         <p><a href="index.php">Home</a></p>
         <p><a href="login.php">Login</a></p>
         <p><a href="contact.php">Contact Us</a></p>
-        <p>MyKia &copy</p>
-        <p>Copyright LRNJ 2022<span>&copy;</span></p>
+        <p>Food Ferry &copy</p>
+        <p>Copyright LRNJ 2023<span>&copy;</span></p>
         </div>
     </div>
 
