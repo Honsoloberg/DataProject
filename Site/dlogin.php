@@ -37,6 +37,12 @@ class dlogin extends config{
 				return 0;
 			}
 
+			if(empty($_COOKIE["ferryLocation"])){
+				$connection->close();
+				header("Location: locationMap.php");
+				return 0;
+			}
+
 			$connection->close();
 			//redirect to different page after login
 			header("Location: main.php");

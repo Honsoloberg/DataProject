@@ -1,5 +1,4 @@
 <?php
-    include("config.php");
     session_start();
 ?>
 
@@ -28,7 +27,6 @@
         <ul class="navList">
             <li class="navItems"><a href="index.php">Home</a></li>
             <li class="navItems"><a href="???">Account</a></li>
-            <li class="navItems"><a href="???">Recommendations</a></li>
         </ul>
     </div>
     <?php
