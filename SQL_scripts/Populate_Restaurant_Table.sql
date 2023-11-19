@@ -9,7 +9,3 @@ VALUES
     (426441, 'Tim Horton''s', 'Oshawa, 3309 Simcoe St. N'),
     (733348, 'Mary Brown''s', 'Oshawa, 15 Taunton Rd. E'),
     (253617, 'Starbucks', 'Oshawa, 2670 Simcoe St. N');
-
-
-
-

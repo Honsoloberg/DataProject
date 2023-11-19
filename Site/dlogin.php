@@ -16,7 +16,7 @@ class dlogin extends config{
 			$_SESSION["err"] = false;
 			
 			//Select query for databse from user table
-			$sql = "SELECT Upass FROM Users WHERE uname = '$uname'";
+			$sql = "SELECT * FROM Users WHERE UserName = '$uname'";
 			$result = $connection->query($sql);
 
 			//Test weather user exists
@@ -29,9 +29,9 @@ class dlogin extends config{
 
 			//Test if password is correct for user
 			$row = $result->fetch_assoc();
-			if($row['upass'] == $upass){
-				$_SESSION["uid"] = $row["id"];
-				$_SESSION["uname"] = $row["uname"];
+			if($row['Upass'] == $upass){
+				$_SESSION["uid"] = $row["ID"];
+				$_SESSION["uname"] = $row["UserName"];
 			}else{
 				$_SESSION["err"] = true;
 				return 0;

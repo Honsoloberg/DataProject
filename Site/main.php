@@ -1,5 +1,6 @@
 <?php
-    start_sesstion();
+    include("config.php");
+    session_start();
 ?>
 
 <!DOCTYPE html>

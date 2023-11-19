@@ -1,11 +1,11 @@
 use dataproject;
 
-DROP TABLE O_Items;
-DROP TABLE orders;
-DROP TABLE users;
-DROP TABLE items;
-DROP TABLE restaurant;
-DROP TABLE driver;
+-- DROP TABLE O_Items;
+-- DROP TABLE orders;
+-- DROP TABLE users;
+-- DROP TABLE items;
+-- DROP TABLE restaurant;
+-- DROP TABLE driver;
 
 create table Users(
 ID INT(6) NOT NULL,
