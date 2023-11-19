@@ -15,12 +15,12 @@
 
     <body>
     <div>
-        <h2 class="header">Food Ferry</h2>
+        <img src="Food_Ferry.png"  alt="Food Ferry" width="175" height="210" style="display:block;margin-left:auto;margin-right:auto;">
         <?php
             if(!empty($_SESSION["uname"])){
-            echo "<h3 style='padding-right: 25px;'> Welcome, ". $_SESSION["uname"]."</h3>";
+            echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, ". $_SESSION["uname"]."</h3>";
             }else {
-                echo "<h3 style='padding-right: 25px;'> Welcome, User</h3>";
+                echo "<h3 style='text-align:center;'> Welcome, User</h3>";
             }
         ?>
     </div>
@@ -32,7 +32,7 @@
         </ul>
     </div>
     <?php
-    
+
     ?>
     </body>
 </html>
