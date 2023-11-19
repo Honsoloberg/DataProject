@@ -31,9 +31,8 @@
             <li class="navItems"><a href="???">Recommendations</a></li>
         </ul>
     </div>
-
     <?php
-
+    
     ?>
     </body>
 </html>
