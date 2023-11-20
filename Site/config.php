@@ -2,9 +2,9 @@
 class config{
 
     //Values required for database connection
-    protected $dbhost = "localhost";
-    protected $dbname = "dataproject";
-    protected $dbuser = "site";
-    protected $dbpass = "password";
+    public $dbhost = "localhost";
+    public $dbname = "dataproject";
+    public $dbuser = "site";
+    public $dbpass = "password";
 }
 ?>
