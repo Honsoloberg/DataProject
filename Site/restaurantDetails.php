@@ -9,34 +9,7 @@ $conn = new mysqli($config->dbhost, $config->dbuser, $config->dbpass, $config->d
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title><?php echo $restaurantName; ?></title>
-    <style>
-        /* Add your CSS styles here */
-        body {
-            font-family: Arial, sans-serif;
-        }
 
-        /* Style the image container */
-        #image-container {
-            text-align: center;
-        }
-
-        /* Style the image */
-        #restaurant-image {
-            width: 100%;
-            max-width: 600px; /* Adjust the maximum width as needed */
-            height: auto;
-        }
-    </style>
-</head>
-<body>
-<?php 
-// Assume a variable containing the restaurant name is set (you need to retrieve this from your application logic)
 $style = isset($_GET["style"]) ? $_GET["style"] : 1;
 if (!isset($_SESSION['style'])) {
     $_SESSION['style'] = $style;
@@ -68,7 +41,37 @@ switch ($style) {
     default:
         $restaurantName = "Unknown Restaurant";
         }       
+
+
+
+
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $restaurantName; ?></title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Style the image container */
+        #image-container {
+            text-align: center;
+        }
+
+        /* Style the image */
+        #restaurant-image {
+            width: 100%;
+            max-width: 600px; /* Adjust the maximum width as needed */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
     <div id="image-container">
     <h1>Welcome to <?php echo $restaurantName; ?></h1>
     <?php
@@ -105,8 +108,6 @@ if ($result->num_rows > 0) {
 
 
 <div>
-
-
     <form method="get">
         <label for="search">Search By Keyword:</label>
         <input type='hidden' name="style" value= "<?php echo $style ?>">
@@ -116,97 +117,68 @@ if ($result->num_rows > 0) {
     </form>
 
     <?php
-    // Initialize an array to store search results
-    $searchResults = [];
+$searchResults = [];
+if (isset($_GET['query'])) {
+    $searchTerm = $_GET['query'];
+    $searchTerm = $conn->real_escape_string($searchTerm);
+    $sortOrder = "ASC";
 
-    // Check if the form is submitted with a search term
-    if (isset($_GET['query'])) {
-        $searchTerm = $_GET['query'];
-
-        // Sanitize the user input to prevent SQL injection
-        $searchTerm = $conn->real_escape_string($searchTerm);
-
-        // Define the default sorting order
-        $sortOrder = "ASC";
-
-        // Check if a sorting order is specified in the URL
-        if (isset($_GET['sort'])) {
-            $sortOrder = $_GET['sort'];
-        }
-
-        // SQL query to retrieve items based on the search term and sorting order
-        $sql = "SELECT Items.*
-                FROM Items
-                INNER JOIN Restaurant ON Items.RID = Restaurant.ID
-                WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '%$searchTerm%'
-                ORDER BY Items.Price $sortOrder";
-
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
-            // Add each result to the searchResults array
-            while ($row = $result->fetch_assoc()) {
-                $searchResults[] = [
-                    'name' => $row["Iname"],
-                    'price' => $row["Price"]
-                ];
-            }
-
-            // Output sorting buttons
-            echo "<div>";
-            echo "<p>Sort by Price:</p>";
-            echo "<form method='get'>";
-            echo "<input type='hidden' name='query' value='$searchTerm'>";
-            echo "<button type='submit' name='sort' value='ASC'>Lowest to Highest</button>";
-            echo "<button type='submit' name='sort' value='DESC'>Highest to Lowest</button>";
-            echo "</form>";
-            echo "</div>";
-
-            // Output search results in a table
-            echo "<table border='1'>";
-            echo "<tr><th>Item</th><th>Price</th></tr>";
-            foreach ($searchResults as $result) {
-                echo "<tr>";
-                echo "<td>" . $result['name'] . "</td>";
-                echo "<td>$" . $result['price'] . "</td>";
-                echo "</tr>";
-            }
-            echo "</table>";
-
-            // Button to clear the results
-            echo "<form method='get'>";
-            echo '<input type="hidden" name="style" value= "<?php echo $style ?>"';
-            echo "<button type='submit' name='clear'>Clear Results</button>";
-            echo "</form>";
-        } else {
-            echo "No items found for the provided search term.";
-        }
-    } else {
-        echo "Please enter a search term.";
+    if (isset($_GET['sort'])) {
+        $sortOrder = $_GET['sort'];
     }
+    $sql = "SELECT Items.*
+            FROM Items
+            INNER JOIN Restaurant ON Items.RID = Restaurant.ID
+            WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '%$searchTerm%'
+            ORDER BY Items.Price $sortOrder";
 
-    // Close the database connection
-    ?>
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // Add each result to the searchResults array
+        while ($row = $result->fetch_assoc()) {
+            $searchResults[] = [
+                'name' => $row["Iname"],
+                'price' => $row["Price"]
+            ];
+        }
+    }
+}
+?>
+
+<div>
+    <p>Sort by Price:</p>
+    <form method='get'>
+        <input type='hidden' name="style" value="<?php echo $style ?>">
+        <button type='submit' name='sort' value='ASC'>Lowest to Highest</button>
+        <button type='submit' name='sort' value='DESC'>Highest to Lowest</button>
+    </form>
 </div>
 
+<table border='1'>
+    <tr><th>Item</th><th>Price</th></tr>
+    <?php foreach ($searchResults as $result) { ?>
+        <tr>
+            <td><?php echo $result['name']; ?></td>
+            <td>$<?php echo $result['price']; ?></td>
+        </tr>
+    <?php } ?>
+</table>
+           <form method='get'>
+            <input type='hidden' name='style' value= '<?php echo $style ?>'>
+            <button type='submit'>Clear Results</button>
+            </form>
 
-
-
-
-
-
-
+</div>
 
 
 <div>
     <h2>Other Nearby Restaurants</h2>
     <?php
-    // Assuming you have a "restaurants" table with a "name" column
     $sql = "SELECT Rname FROM restaurant";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        // Output data of each row in an unordered list, with each value as a link to "main.php"
         echo "<ul>";
         while ($row = $result->fetch_assoc()) {
             $otherRestaurantName = $row["Rname"];
@@ -224,17 +196,5 @@ if ($result->num_rows > 0) {
     ?>
 </div>
 
-
-
-
-
-
 </body>
 </html>
-
-
-
-
-
-
-
