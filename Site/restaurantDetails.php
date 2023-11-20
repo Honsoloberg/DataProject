@@ -9,7 +9,6 @@ $conn = new mysqli($config->dbhost, $config->dbuser, $config->dbpass, $config->d
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
 ?>
 
 
@@ -77,11 +76,7 @@ switch ($style) {
     ?>
 </div>
 
-
-
 <?php
-
-
 // SQL query to retrieve items based on the provided restaurant name
 $sql = "SELECT Items.*
         FROM Items
@@ -107,60 +102,32 @@ if ($result->num_rows > 0) {
 
 ?>
 
+<div>
+    <h2>Other Nearby Restaurants</h2>
+    <?php
+    // Assuming you have a "restaurants" table with a "name" column
+    $sql = "SELECT Rname FROM restaurant";
+    $result = $conn->query($sql);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div>
-        <h2>Other Nearby Restaurants</h2>
-        <?php
-        // Assuming you have a "restaurants" table with a "name" column
-        $sql = "SELECT Rname FROM restaurant";
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
-            // Output data of each row in an unordered list
-            echo "<ul>";
-            while ($row = $result->fetch_assoc()) {
-                echo "<li>" . $row["Rname"] . "</li>";
+    if ($result->num_rows > 0) {
+        // Output data of each row in an unordered list, excluding the current restaurant
+        echo "<ul>";
+        while ($row = $result->fetch_assoc()) {
+            $otherRestaurantName = $row["Rname"];
+            if ($otherRestaurantName != $restaurantName) {
+                echo "<li>" . $otherRestaurantName . "</li>";
             }
-            echo "</ul>";
-        } else {
-            echo "0 results";
         }
+        echo "</ul>";
+    } else {
+        echo "0 results";
+    }
 
-        // Close the database connection
-        $conn->close();
-        ?>
-    </div>
+    // Close the database connection
+    $conn->close();
+    ?>
+</div>
+
 
     <!-- Add more sections or content as needed -->
 
