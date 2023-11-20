@@ -6,7 +6,8 @@ class Mpopulate extends config{
 
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
 
-        $sql = 
+        //$sql = 
+        //not sure when this file got here
     }
 }
 ?>

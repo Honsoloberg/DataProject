@@ -9,11 +9,7 @@ $conn = new mysqli($config->dbhost, $config->dbuser, $config->dbpass, $config->d
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
-$sql = "SELECT Rname FROM restaurant";
-$result = $conn->query($sql);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,25 +41,40 @@ $result = $conn->query($sql);
     <div>
         <h2>Nearby Restaurants</h2>
         <?php
-        if ($result->num_rows > 0) {
-            // Output data of each row in an unordered list with dynamically changing image sources and bold restaurant names
-            echo "<ul>";
-            $style = 1; // Initialize style number
-            while ($row = $result->fetch_assoc()) {
-                $imageName = $row["Rname"] . ".jpg";
-                echo "<li>";
-                echo "<a href='restaurantDetails.php?style=" . $style . "'>";
-                echo "<img src='$imageName' alt='Restaurant Image' width='250' height='200' style='margin-right: 10px;'>";
-                echo "<strong>" . $row["Rname"] . "</strong>";
-                echo "</a>";
-                echo "</li>";
-                $style++; // Increment style number for the next iteration
-            }
-            echo "</ul>";
-        } else {
-            echo "0 results";
-        }
-        ?>
+
+
+
+        $sql = "SELECT Rname FROM restaurant";
+        $result = $conn->query($sql);
+        
+
+if ($result->num_rows > 0) {
+    // Output data of each row in an unordered list with dynamically changing image sources and bold restaurant names
+    echo "<ul>";
+    $style = 1; // Initialize style number
+    while ($row = $result->fetch_assoc()) {
+        $imageName = $row["Rname"] . ".jpg";
+        echo "<li>";
+
+        echo "<form method='get' action='restaurantDetails.php'>";
+        echo "<input type='hidden' name='style' value='$style'>";
+        echo "<button type='submit'>";
+        echo "<img src='$imageName' alt='Restaurant Image' width='250' height='200' style='margin-right: 10px;'>";
+        echo "<strong>" . $row["Rname"] . "</strong>";
+        echo "</button>";
+        echo "</form>";
+
+
+
+        echo "</li>";
+        $style++; // Increment style number for the next iteration
+    }
+    echo "</ul>";
+} else {
+    echo "0 results";
+}
+?>
+
         
     </div>
 
