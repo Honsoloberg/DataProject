@@ -79,6 +79,35 @@ switch ($style) {
 
 
 
+<?php
+
+
+// SQL query to retrieve items based on the provided restaurant name
+$sql = "SELECT Items.*
+        FROM Items
+        INNER JOIN Restaurant ON Items.RID = Restaurant.ID
+        WHERE Restaurant.Rname = '$restaurantName'";
+
+// Execute the query
+$result = $conn->query($sql);
+
+// Check if there are results
+if ($result->num_rows > 0) {
+    // Output data of each row
+    echo "<ul>";
+    while ($row = $result->fetch_assoc()) {
+        echo "<li>";
+        echo "Item: " . $row["Iname"] . ", Price: $" . $row["Price"];
+        echo "</li>";
+    }
+    echo "</ul>";
+} else {
+    echo "No items found for the provided restaurant name.";
+}
+
+?>
+
+
 
 
 
