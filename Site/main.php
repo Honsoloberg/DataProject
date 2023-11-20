@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 include("config.php");
 session_start();
 
@@ -12,6 +13,9 @@ if ($conn->connect_error) {
 
 $sql = "SELECT Rname FROM restaurant";
 $result = $conn->query($sql);
+=======
+    session_start();
+>>>>>>> 26fad1a0e16fb97aac1f178cc44b8906c820f3c0
 ?>
 
 <!DOCTYPE html>
