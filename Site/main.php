@@ -40,7 +40,9 @@ if ($conn->connect_error) {
     </div>
     <div>
         <h2>Nearby Restaurants</h2>
-        <?php
+       
+       
+    <?php
 
 
 
@@ -48,7 +50,7 @@ if ($conn->connect_error) {
         $result = $conn->query($sql);
         
 
-if ($result->num_rows > 0) {
+    if ($result->num_rows > 0) {
     // Output data of each row in an unordered list with dynamically changing image sources and bold restaurant names
     echo "<ul>";
     $style = 1; // Initialize style number
@@ -70,9 +72,9 @@ if ($result->num_rows > 0) {
         $style++; // Increment style number for the next iteration
     }
     echo "</ul>";
-} else {
+    } else {
     echo "0 results";
-}
+    }
 ?>
 
         

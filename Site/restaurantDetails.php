@@ -40,11 +40,9 @@ switch ($style) {
 
     default:
         $restaurantName = "Unknown Restaurant";
-        }       
-
-
-
-
+        }  
+        $sortOrder = "ASC"; 
+        $searchResults = [];    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -117,11 +115,11 @@ if ($result->num_rows > 0) {
     </form>
 
     <?php
-$searchResults = [];
+
 if (isset($_GET['query'])) {
     $searchTerm = $_GET['query'];
     $searchTerm = $conn->real_escape_string($searchTerm);
-    $sortOrder = "ASC";
+    
 
     if (isset($_GET['sort'])) {
         $sortOrder = $_GET['sort'];
@@ -149,10 +147,13 @@ if (isset($_GET['query'])) {
 <div>
     <p>Sort by Price:</p>
     <form method='get'>
-        <input type='hidden' name="style" value="<?php echo $style ?>">
-        <button type='submit' name='sort' value='ASC'>Lowest to Highest</button>
-        <button type='submit' name='sort' value='DESC'>Highest to Lowest</button>
+    <input type='hidden' name="style" value="<?php echo $style ?>">
+    <input type='hidden' name="query" value="<?php echo isset($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>">
+    <button type='submit' name='sort' value='ASC'>Lowest to Highest</button>
+    <button type='submit' name='sort' value='DESC'>Highest to Lowest</button>
     </form>
+
+
 </div>
 
 <table border='1'>
