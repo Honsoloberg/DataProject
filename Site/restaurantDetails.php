@@ -10,10 +10,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Assume a variable containing the restaurant name is set (you need to retrieve this from your application logic)
-$restaurantName = "Starbucks";
-
-
 ?>
 
 
@@ -42,17 +38,82 @@ $restaurantName = "Starbucks";
     </style>
 </head>
 <body>
-    <div id="image-container">
-        <h1><?php echo $restaurantName; ?></h1>
-        <img src="Starbucks.jpg" alt="<?php echo $restaurantName; ?>" id="restaurant-image">
-    </div>
 
-    <!-- Add your additional content below this line -->
+
+
+<?php 
+// Assume a variable containing the restaurant name is set (you need to retrieve this from your application logic)
+$style = isset($_GET["style"]) ? $_GET["style"] : 1;
+switch ($style) {
+    case 1:
+        $restaurantName = "Starbucks";
+        break;
+    case 2:
+        $restaurantName = "Wendys";
+        break;
+    case 3:
+        $restaurantName = "Osmows";
+        break;
+    case 4:
+        $restaurantName = "Tim Hortons";
+        break;
+    case 5:
+        $restaurantName = "Mary Browns";
+        break;
+    case 6:
+        $restaurantName = "McDonalds";
+        break;
+    // Add more cases if needed
+
+    default:
+        $restaurantName = "Unknown Restaurant";
+}
+?>
+    <div id="image-container">
+    <h1>Welcome to <?php echo $restaurantName; ?></h1>
+    <?php
+        $imageName = $restaurantName . ".jpg";
+        echo "<img src='$imageName' alt='$restaurantName' id='restaurant-image'>";
+    ?>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <div>
         <h2>Other Nearby Restaurants</h2>
         <?php
-        // Assuming you have a 'restaurants' table with a 'name' column
+        // Assuming you have a "restaurants" table with a "name" column
         $sql = "SELECT Rname FROM restaurant";
         $result = $conn->query($sql);
 
