@@ -51,8 +51,10 @@ $result = $conn->query($sql);
             while ($row = $result->fetch_assoc()) {
                 $imageName = $row["Rname"] . ".jpg";
                 echo "<li>";
+                echo "<a href='restaurantDetails.php'>";
                 echo "<img src='$imageName' alt='Restaurant Image' width='250' height='200' style='margin-right: 10px;'>";
                 echo "<strong>" . $row["Rname"] . "</strong>";
+                echo "</a>";
                 echo "</li>";
             }
             echo "</ul>";
