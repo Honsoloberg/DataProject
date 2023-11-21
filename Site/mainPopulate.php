@@ -10,7 +10,7 @@ class Mpopulate extends config{
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
-            echo "<form method='post' action='restaurantDetails.php'>";
+            echo "<form method='get' action='restaurantDetails.php'>";
 
             while ($row = $result->fetch_assoc()) {
                 $imageName = $row["Rname"] . ".jpg";
