@@ -16,6 +16,7 @@ if (!isset($_SESSION['style'])) {
 }
 
 
+
 switch ($style) {
     case 1:
         $restaurantName = "Starbucks";
@@ -171,6 +172,95 @@ if (isset($_GET['query'])) {
             </form>
 
 </div>
+
+
+<h2>Active Orders</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Restaurant</th>
+            <th>Item Name</th>
+            <th>Quantity</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody id="orderTableBody">
+    <?php
+    // Check if $_SESSION["uname"] is set and not empty before using it
+    if (isset($_SESSION["uname"]) && !empty($_SESSION["uname"])) {
+        // Use the value stored in $_SESSION["uname"] as the username variable
+        $usernameVariable = $_SESSION["uname"];
+
+        $sql = "SELECT
+                O_Items.Quant AS Quantity,
+                Items.Iname AS ItemName,
+                Items.Decript AS Description,
+                Items.Price,
+                Restaurant.Rname AS RestaurantName
+            FROM
+                O_Items
+            JOIN
+                Items ON O_Items.Item_ID = Items.ID
+            JOIN
+                Orders ON O_Items.O_ID = Orders.ID
+            JOIN
+                Restaurant ON Orders.RID = Restaurant.ID
+            JOIN
+                Users ON Orders.UID = Users.ID
+            WHERE
+                Users.UserName = '$usernameVariable'";
+
+        $result = $conn->query($sql);
+
+        // Check if there are results
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo '<tr>';
+                echo '<td>' . $row['RestaurantName'] . '</td>';
+                echo '<td>' . $row['ItemName'] . '</td>';
+                echo '<td>' . $row['Quantity'] . '</td>';
+                echo '<td>' . $row['Description'] . '</td>';
+                echo '<td>' . $row['Price'] . '</td>';
+                echo '</tr>';
+            }
+        } else {
+            echo '<tr><td colspan="5">No active orders found</td></tr>';
+        }
+    } else {
+        // Handle the case where $_SESSION["uname"] is not set or empty
+        echo '<tr><td colspan="5">Invalid username</td></tr>';
+    }
+
+    // Close the database connection
+
+    ?>
+</tbody>
+</table>
+
+
+
+<!-- You can add a button or link to trigger the addition of a new row -->
+<button onclick="addNewRow()">Add New Row</button>
+
+<script>
+function addNewRow() {
+    // You can add logic here to fetch data or get input from the user
+    var newRowData = ['New Restaurant', 'New Item', 1, 'New Description', 10.00];
+
+    var tableBody = document.getElementById('orderTableBody');
+    var newRow = document.createElement('tr');
+
+    newRowData.forEach(function(value) {
+        var cell = document.createElement('td');
+        cell.textContent = value;
+        newRow.appendChild(cell);
+    });
+
+    tableBody.appendChild(newRow);
+}
+</script>
 
 
 <div>
