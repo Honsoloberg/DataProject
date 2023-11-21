@@ -174,11 +174,31 @@ if (isset($_GET['query'])) {
 </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <h2>Active Orders</h2>
 
 <table border="1">
     <thead>
         <tr>
+
+            <th>Order Number</th>
             <th>Restaurant</th>
             <th>Item Name</th>
             <th>Quantity</th>
@@ -194,11 +214,13 @@ if (isset($_GET['query'])) {
         $usernameVariable = $_SESSION["uname"];
 
         $sql = "SELECT
+                O_Items.O_ID AS Order_Number,
                 O_Items.Quant AS Quantity,
                 Items.Iname AS ItemName,
-                Items.Decript AS Description,
+                Items.Decript AS Descriptions,
                 Items.Price,
                 Restaurant.Rname AS RestaurantName
+    
             FROM
                 O_Items
             JOIN
@@ -218,10 +240,11 @@ if (isset($_GET['query'])) {
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo '<tr>';
+                echo '<td>' . $row['Order_Number'] . '</td>';
                 echo '<td>' . $row['RestaurantName'] . '</td>';
                 echo '<td>' . $row['ItemName'] . '</td>';
                 echo '<td>' . $row['Quantity'] . '</td>';
-                echo '<td>' . $row['Description'] . '</td>';
+                echo '<td>' . $row['Descriptions'] . '</td>';
                 echo '<td>' . $row['Price'] . '</td>';
                 echo '</tr>';
             }
@@ -241,13 +264,38 @@ if (isset($_GET['query'])) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- You can add a button or link to trigger the addition of a new row -->
-<button onclick="addNewRow()">Add New Row</button>
+<button onclick="addNewRow()">Add Item to Oder</button>
 
 <script>
 function addNewRow() {
     // You can add logic here to fetch data or get input from the user
-    var newRowData = ['New Restaurant', 'New Item', 1, 'New Description', 10.00];
+    var newRowData = [' ', ' ', '', 0,'',0];
 
     var tableBody = document.getElementById('orderTableBody');
     var newRow = document.createElement('tr');
