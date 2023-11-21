@@ -10,46 +10,46 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$style = isset($_GET["style"]) ? $_GET["style"] : 1;
+$style = isset($_POST["style"]) ? $_POST["style"] : 1;
 if (!isset($_SESSION['style'])) {
     $_SESSION['style'] = $style;
 }
 
 
 
-switch ($style) {
-    case 1:
-        $restaurantName = "Starbucks";
+// switch ($style) {
+//     case 1:
+//         $restaurantName = "Starbucks";
 
-        break;
-    case 2:
-        $restaurantName = "Wendys";
-        break;
-    case 3:
-        $restaurantName = "Osmows";
-        break;
-    case 4:
-        $restaurantName = "Tim Hortons";
-        break;
-    case 5:
-        $restaurantName = "Mary Browns";
-        break;
-    case 6:
-        $restaurantName = "McDonalds";
-        break;
-    // Add more cases if needed
+//         break;
+//     case 2:
+//         $restaurantName = "Wendys";
+//         break;
+//     case 3:
+//         $restaurantName = "Osmows";
+//         break;
+//     case 4:
+//         $restaurantName = "Tim Hortons";
+//         break;
+//     case 5:
+//         $restaurantName = "Mary Browns";
+//         break;
+//     case 6:
+//         $restaurantName = "McDonalds";
+//         break;
+//     // Add more cases if needed
 
-    default:
-        $restaurantName = "Unknown Restaurant";
-        }  
-        $sortOrder = "ASC"; 
-        $searchResults = [];    
+//     default:
+//         $restaurantName = "Unknown Restaurant";
+//         }  
+//         $sortOrder = "ASC"; 
+//         $searchResults = [];    
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?php echo $restaurantName; ?></title>
+    <title><?php echo $_POST['Rname']; ?></title>
     <style>
         /* Add your CSS styles here */
         body {
@@ -72,19 +72,19 @@ switch ($style) {
 <body>
 
     <div id="image-container">
-    <h1>Welcome to <?php echo $restaurantName; ?></h1>
+    <h1>Welcome to <?php echo $_POST['Rname']; ?></h1>
     <?php
-        $imageName = $restaurantName . ".jpg";
-        echo "<img src='$imageName' alt='$restaurantName' id='restaurant-image'>";
+        $imageName = $_POST['Rname'] . ".jpg";
+        echo "<img src='$imageName' alt='" . $_POST['Rname'] . "' id='restaurant-image'>";
     ?>
     </div>
     <?php
 
     // SQL query to retrieve items based on the provided restaurant name
-    $sql = "SELECT Items.*
+    $sql = 'SELECT Items.*
         FROM Items
         INNER JOIN Restaurant ON Items.RID = Restaurant.ID
-        WHERE Restaurant.Rname = '$restaurantName'";
+        WHERE Restaurant.Rname ="' . $_POST['Rname'] . '"';
 
 // Execute the query
 $result = $conn->query($sql);
@@ -128,7 +128,7 @@ if (isset($_GET['query'])) {
     $sql = "SELECT Items.*
             FROM Items
             INNER JOIN Restaurant ON Items.RID = Restaurant.ID
-            WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '%$searchTerm%'
+            WHERE Restaurant.Rname = " . $_GET['Rname'] .  "AND Items.Iname LIKE '%$searchTerm%'
             ORDER BY Items.Price $sortOrder";
 
     $result = $conn->query($sql);
@@ -321,7 +321,7 @@ function addNewRow() {
         echo "<ul>";
         while ($row = $result->fetch_assoc()) {
             $otherRestaurantName = $row["Rname"];
-            if ($otherRestaurantName != $restaurantName) {
+            if ($otherRestaurantName != $_GET['Rname']) {
                 echo "<li><a href='main.php?restaurantName=" . urlencode($otherRestaurantName) . "'>" . $otherRestaurantName . "</a></li>";
             }
         }
