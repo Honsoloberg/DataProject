@@ -145,6 +145,333 @@ if (isset($_GET['query'])) {
 }
 ?>
 
+<?php
+
+
+
+
+
+
+$sql = "SELECT R.Rname, I.Iname AS ItemName, I.Price AS MaxPrice
+        FROM Restaurant R
+        JOIN Items I ON R.ID = I.RID
+        WHERE R.Rname = '$restaurantName'
+        AND I.Price = (SELECT MAX(Price) FROM Items WHERE RID = R.ID)";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Output data in a table
+    echo "<table border='1'>
+            <tr>
+                <th>Restaurant Name</th>
+                <th>Item Name</th>
+                <th>Max Price</th>
+            </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" . $row["Rname"] . "</td>
+                <td>" . $row["ItemName"] . "</td>
+                <td>" . $row["MaxPrice"] . "</td>
+              </tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "0 results";
+}
+
+
+
+
+$sql = "SELECT R.Rname, I.Iname AS ItemName, I.Price AS MinPrice
+    FROM Restaurant R
+    JOIN Items I ON R.ID = I.RID
+    WHERE R.Rname = '$restaurantName'
+    AND I.Price = (SELECT MIN(Price) FROM Items WHERE RID = R.ID);";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Output data in a table
+    echo "<table border='1'>
+            <tr>
+                <th>Restaurant Name</th>
+                <th>Item Name</th>
+                <th>Min Price</th>
+            </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" . $row["Rname"] . "</td>
+                <td>" . $row["ItemName"] . "</td>
+                <td>" . $row["MinPrice"] . "</td>
+              </tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "0 results";
+}
+
+$sql = "SELECT R.Rname, R.Address
+        FROM Restaurant R
+        WHERE R.Rname = '$restaurantName'";
+
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Output data in a table
+    echo "<table border='1'>
+            <tr>
+                <th>Restaurant Name</th>
+                <th>Address</th>
+            </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" . $row["Rname"] . "</td>
+                <td>" . $row["Address"] . "</td>
+              </tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "0 results";
+}
+
+$sql = "SELECT R.Rname, I.Iname, I.Price, I.Decript
+        FROM Restaurant R
+        JOIN Items I ON R.ID = I.RID
+        WHERE I.Price = ALL (
+            SELECT MAX(Price)
+            FROM Items
+            WHERE RID = R.ID
+            GROUP BY RID
+        );
+";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Output data in a table
+    echo "<table border='1'>
+            <tr>
+                <th>Restaurant Name</th>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Description</th>
+            </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" . $row["Rname"] . "</td>
+                <td>" . $row["Iname"] . "</td>
+                <td>" . $row["Price"] . "</td>
+                <td>" . $row["Decript"] . "</td>
+              </tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "0 results";
+}
+
+
+
+$sql = "SELECT r.Rname AS RestaurantName, COUNT(o.ID) AS OrderCount, AVG(o.TotalPrice) AS AvgTotalPrice
+    FROM Orders o
+    JOIN Restaurant r ON o.RID = r.ID
+    WHERE (
+        SELECT AVG(i.Price)
+        FROM Items i
+        WHERE i.RID = o.RID
+    ) < ANY (
+        SELECT io.Price
+        FROM O_Items oi
+        JOIN Items io ON oi.Item_ID = io.ID
+        WHERE oi.O_ID = o.ID
+    )
+    GROUP BY r.Rname;";
+
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Output data in a table
+    echo "<table border='1'>
+            <tr>
+                <th>Restaurant Name</th>
+                <th>Order Count</th>
+                <th>Average Total Price</th>
+            </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" . $row["RestaurantName"] . "</td>
+                <td>" . $row["OrderCount"] . "</td>
+                <td>" . $row["AvgTotalPrice"] . "</td>
+              </tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "0 results";
+}
+
+
+
+
+$sql = "SELECT Driver.ID, Driver.Fname, Driver.Lname, Driver.CarModel, Driver.Plate, Driver.Insurance,
+           Orders.ID AS OrderID, Orders.TotalPrice, Restaurant.Rname AS RestaurantName, Users.Fname AS UserName
+        FROM Driver
+        LEFT JOIN Orders ON Driver.ID = Orders.DID
+        LEFT JOIN Restaurant ON Orders.RID = Restaurant.ID
+        LEFT JOIN Users ON Orders.UID = Users.ID
+        UNION
+        SELECT Driver.ID, Driver.Fname, Driver.Lname, Driver.CarModel, Driver.Plate, Driver.Insurance,
+            Orders.ID AS OrderID, Orders.TotalPrice, Restaurant.Rname AS RestaurantName, Users.Fname AS UserName
+        FROM Driver
+        RIGHT JOIN Orders ON Driver.ID = Orders.DID
+        LEFT JOIN Restaurant ON Orders.RID = Restaurant.ID
+        LEFT JOIN Users ON Orders.UID = Users.ID;
+";
+
+$result = $conn->query($sql);
+
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver and Orders Data</title>
+</head>
+<body>
+
+<h2>Driver and Orders Data</h2>
+
+<table border='1'>
+    <tr>
+        <th>Driver ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Car Model</th>
+        <th>Plate</th>
+        <th>Insurance</th>
+        <th>Order ID</th>
+        <th>Total Price</th>
+        <th>Restaurant Name</th>
+        <th>User Name</th>
+    </tr>
+
+    <?php
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>" . $row["ID"] . "</td>
+                    <td>" . $row["Fname"] . "</td>
+                    <td>" . $row["Lname"] . "</td>
+                    <td>" . $row["CarModel"] . "</td>
+                    <td>" . $row["Plate"] . "</td>
+                    <td>" . $row["Insurance"] . "</td>
+                    <td>" . $row["OrderID"] . "</td>
+                    <td>" . $row["TotalPrice"] . "</td>
+                    <td>" . $row["RestaurantName"] . "</td>
+                    <td>" . $row["UserName"] . "</td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='10'>0 results</td></tr>";
+    }
+    ?>
+</table>
+
+
+
+<?php 
+$sql = "SELECT Items.ID, Items.Iname, Items.Price, Restaurant.Rname
+        FROM Items
+        LEFT JOIN Restaurant ON Items.RID = Restaurant.ID
+        WHERE Items.RID = 253617
+        UNION
+        SELECT Items.ID, Items.Iname, Items.Price, Restaurant.Rname
+        FROM Items
+        LEFT JOIN Restaurant ON Items.RID = Restaurant.ID
+        WHERE Items.RID = 266291";
+$result = $conn->query($sql);
+?>
+
+<table border='1'>
+    <tr>
+        <th>Item ID</th>
+        <th>Item Name</th>
+        <th>Price</th>
+        <th>Restaurant Name</th>
+    </tr>
+    <?php
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>" . $row["ID"] . "</td>
+                    <td>" . $row["Iname"] . "</td>
+                    <td>" . $row["Price"] . "</td>
+                    <td>" . $row["Rname"] . "</td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='4'>0 results</td></tr>";
+    }
+    ?>
+</table>
+
+<h2>User Data</h2>
+
+
+
+
+<?php
+$localID = $_SESSION["uname"];
+
+$sql = "SELECT Funds, Fname, Lname, UserName
+        FROM Users
+        WHERE UserName = '$localID'";
+
+$result = $conn->query($sql);
+?>
+
+<table border='1'>
+    <tr>
+        <th>Funds</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>User Name/th>
+    </tr>
+    <?php
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>" . $row["Funds"] . "</td>
+                    <td>" . $row["Fname"] . "</td>
+                    <td>" . $row["Lname"] . "</td>
+                    <td>" . $row["UserName"] . "</td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='3'>0 results</td></tr>";
+    }
+    ?>
+</table>
+
+
+
+
+
+
 <div>
     <p>Sort by Price:</p>
     <form method='get'>
