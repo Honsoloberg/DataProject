@@ -10,32 +10,35 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$style = isset($_GET["style"]) ? $_GET["style"] : 1;
-if (!isset($_SESSION['style'])) {
-    $_SESSION['style'] = $style;
+if(!isset($_SESSION['style'])){
+    $_SESSION['style'] = $_GET['Rname'];
 }
 
 
-
-switch ($style) {
-    case 1:
+switch ($_SESSION['style']) {
+    case "Starbucks":
         $restaurantName = "Starbucks";
-
+        $style = 1;
         break;
-    case 2:
+    case "Wendys":
         $restaurantName = "Wendys";
+        $style = 2;
         break;
-    case 3:
+    case "Osmows":
         $restaurantName = "Osmows";
+        $style = 3;
         break;
-    case 4:
+    case "Tim Hortons":
         $restaurantName = "Tim Hortons";
+        $style = 4;
         break;
-    case 5:
+    case "Mary Browns":
         $restaurantName = "Mary Browns";
+        $style = 5;
         break;
-    case 6:
+    case "McDonalds":
         $restaurantName = "McDonalds";
+        $style = 6;
         break;
     // Add more cases if needed
 
@@ -43,7 +46,7 @@ switch ($style) {
         $restaurantName = "Unknown Restaurant";
         }  
         $sortOrder = "ASC"; 
-        $searchResults = [];    
+        $searchResults = [];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,6 +71,7 @@ switch ($style) {
             height: auto;
         }
     </style>
+    <link rel="stylesheet" href="nav.css">
 </head>
 <body>
 
@@ -77,6 +81,14 @@ switch ($style) {
         $imageName = $restaurantName . ".jpg";
         echo "<img src='$imageName' alt='$restaurantName' id='restaurant-image'>";
     ?>
+    </div>
+    <div class="navBar">
+        <ul class="navList">
+            <li class="navItems"><a href="main.php">Home</a></li>
+            <li class="navItems"><a href="???">Account</a></li>
+            <li class="navItems"><a href="???">Recommendations</a></li>
+            
+        </ul>
     </div>
     <?php
 
@@ -135,13 +147,23 @@ if (isset($_GET['query'])) {
 
     if ($result->num_rows > 0) {
         // Add each result to the searchResults array
-        while ($row = $result->fetch_assoc()) {
-            $searchResults[] = [
-                'name' => $row["Iname"],
-                'price' => $row["Price"]
-            ];
+        if(isset($_SESSION['search'])){
+            $searchResults = $_SESSION['search'];
+        }
+        if($_GET['query'] != ""){
+            while ($row = $result->fetch_assoc()) {
+                $searchResults[] = [
+                    'name' => $row["Iname"],
+                    'price' => $row["Price"]
+                ];
+            }
+            $_SESSION['search'] = $searchResults;
         }
     }
+
+    // foreach($searchResults as $result)|{
+
+    // }
 }
 ?>
 
@@ -172,8 +194,6 @@ if (isset($_GET['query'])) {
             </form>
 
 </div>
-
-
 
 
 
