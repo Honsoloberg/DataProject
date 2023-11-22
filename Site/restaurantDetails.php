@@ -47,6 +47,7 @@ switch ($_SESSION['style']) {
         }  
         $sortOrder = "ASC"; 
         $searchResults = [];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -137,6 +138,7 @@ if (isset($_GET['query'])) {
     if (isset($_GET['sort'])) {
         $sortOrder = $_GET['sort'];
     }
+
     $sql = "SELECT Items.*
             FROM Items
             INNER JOIN Restaurant ON Items.RID = Restaurant.ID
@@ -161,9 +163,6 @@ if (isset($_GET['query'])) {
         }
     }
 
-    // foreach($searchResults as $result)|{
-
-    // }
 }
 ?>
 
