@@ -1,12 +1,4 @@
 <?php
-//
-//
-//
-//When internal form is submitted the post array is wiped. Store all values into session
-//
-//
-//
-
 include("config.php");
 session_start();
 
@@ -18,13 +10,46 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+$style = isset($_GET["style"]) ? $_GET["style"] : 1;
+if (!isset($_SESSION['style'])) {
+    $_SESSION['style'] = $style;
+}
 
+
+
+switch ($style) {
+    case 1:
+        $restaurantName = "Starbucks";
+
+        break;
+    case 2:
+        $restaurantName = "Wendys";
+        break;
+    case 3:
+        $restaurantName = "Osmows";
+        break;
+    case 4:
+        $restaurantName = "Tim Hortons";
+        break;
+    case 5:
+        $restaurantName = "Mary Browns";
+        break;
+    case 6:
+        $restaurantName = "McDonalds";
+        break;
+    // Add more cases if needed
+
+    default:
+        $restaurantName = "Unknown Restaurant";
+        }  
+        $sortOrder = "ASC"; 
+        $searchResults = [];    
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?php echo $_GET['Rname']; ?></title>
+    <title><?php echo $restaurantName; ?></title>
     <style>
         /* Add your CSS styles here */
         body {
@@ -47,19 +72,19 @@ if ($conn->connect_error) {
 <body>
 
     <div id="image-container">
-    <h1>Welcome to <?php echo $_GET['Rname']; ?></h1>
+    <h1>Welcome to <?php echo $restaurantName; ?></h1>
     <?php
-        $imageName = $_GET['Rname'] . ".jpg";
-        echo "<img src='$imageName' alt='" . $_GET['Rname'] . "' id='restaurant-image'>";
+        $imageName = $restaurantName . ".jpg";
+        echo "<img src='$imageName' alt='$restaurantName' id='restaurant-image'>";
     ?>
     </div>
     <?php
 
     // SQL query to retrieve items based on the provided restaurant name
-    $sql = 'SELECT Items.*
+    $sql = "SELECT Items.*
         FROM Items
         INNER JOIN Restaurant ON Items.RID = Restaurant.ID
-        WHERE Restaurant.Rname ="' . $_GET['Rname'] . '"';
+        WHERE Restaurant.Rname = '$restaurantName'";
 
 // Execute the query
 $result = $conn->query($sql);
@@ -84,7 +109,7 @@ if ($result->num_rows > 0) {
 <div>
     <form method="get">
         <label for="search">Search By Keyword:</label>
-        <input type='hidden' name="Rname" value= "<?php echo $_GET['Rname'] ?>">
+        <input type='hidden' name="style" value= "<?php echo $style ?>">
         <input type="text" id="search" name="query" placeholder="What are you hungry for?">
         <button type="submit">Search</button>
         
@@ -92,42 +117,38 @@ if ($result->num_rows > 0) {
 
     <?php
 
-        if (isset($_GET['query']) && $_GET['query'] != NULL) {
-            $searchTerm = $_GET['query'];
-            $searchTerm = $conn->real_escape_string($searchTerm);
+if (isset($_GET['query'])) {
+    $searchTerm = $_GET['query'];
+    $searchTerm = $conn->real_escape_string($searchTerm);
+    
 
-            if (isset($_GET['sort'])) {
-                $sortOrder = $_GET['sort'];
-            }else{
-                $sortOrder = "ASC";
-            }
+    if (isset($_GET['sort'])) {
+        $sortOrder = $_GET['sort'];
+    }
+    $sql = "SELECT Items.*
+            FROM Items
+            INNER JOIN Restaurant ON Items.RID = Restaurant.ID
+            WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '%$searchTerm%'
+            ORDER BY Items.Price $sortOrder";
 
-            $sql = "SELECT Items.*
-                    FROM Items
-                    INNER JOIN Restaurant ON Items.RID = Restaurant.ID
-                    WHERE Restaurant.Rname = '" . $_GET['Rname'] . "'" . " AND Items.Iname = '" . "$searchTerm" .
-                    "' ORDER BY Items.Price $sortOrder";
+    $result = $conn->query($sql);
 
-            $result = $conn->query($sql);
-
-            if ($result->num_rows > 0) {
-                // Add each result to the searchResults array
-                while ($row = $result->fetch_assoc()) {
-                    if (!isset($searchResults)) {$searchResults = array("name"=>"$row['Iname']", "price"=>"$row['Price']")}
-                    // if (!isset($searchResults) && )
-                    $searchResults[] = [
-                        'name' => $row["Iname"],
-                        'price' => $row["Price"]
-                    ];
-                }
-            }
+    if ($result->num_rows > 0) {
+        // Add each result to the searchResults array
+        while ($row = $result->fetch_assoc()) {
+            $searchResults[] = [
+                'name' => $row["Iname"],
+                'price' => $row["Price"]
+            ];
         }
-    ?>
+    }
+}
+?>
 
 <div>
     <p>Sort by Price:</p>
     <form method='get'>
-    <input type='hidden' name="Rname" value="<?php echo $_GET['Rname'] ?>">
+    <input type='hidden' name="style" value="<?php echo $style ?>">
     <input type='hidden' name="query" value="<?php echo isset($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>">
     <button type='submit' name='sort' value='ASC'>Lowest to Highest</button>
     <button type='submit' name='sort' value='DESC'>Highest to Lowest</button>
@@ -138,15 +159,15 @@ if ($result->num_rows > 0) {
 
 <table border='1'>
     <tr><th>Item</th><th>Price</th></tr>
-    <?php if (isset($_GET['query']) && $_GET['query'] != NULL) {foreach ($searchResults as $result) { ?>
+    <?php foreach ($searchResults as $result) { ?>
         <tr>
             <td><?php echo $result['name']; ?></td>
             <td>$<?php echo $result['price']; ?></td>
         </tr>
-    <?php }} ?>
+    <?php } ?>
 </table>
            <form method='get'>
-            <input type='hidden' name='Rname' value= '<?php echo $_GET['Rname']; ?>'>
+            <input type='hidden' name='style' value= '<?php echo $style ?>'>
             <button type='submit'>Clear Results</button>
             </form>
 
@@ -300,7 +321,7 @@ function addNewRow() {
         echo "<ul>";
         while ($row = $result->fetch_assoc()) {
             $otherRestaurantName = $row["Rname"];
-            if ($otherRestaurantName != $_GET['Rname']) {
+            if ($otherRestaurantName != $restaurantName) {
                 echo "<li><a href='main.php?restaurantName=" . urlencode($otherRestaurantName) . "'>" . $otherRestaurantName . "</a></li>";
             }
         }
