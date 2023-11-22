@@ -52,13 +52,39 @@ class dlogin extends config{
 		//Creates connection to database
 		$connection = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
 
+		$sql = "SELECT ID FROM Users";
+		$result = $connection->query($sql);
+
+		while($row = $result->fetch_assoc()){
+			$uIDS[] = $row['ID'];
+		}
+
+		$newID = rand(0, 999999);
+
+		while(TRUE){
+			$flag = FALSE;
+			foreach($uIDS as $check){
+				if($newID == $check){
+					$newID = rand(0, 999999);
+					$flag = TRUE;
+					break;
+				}
+			}
+			if(!$flag){
+				break;
+			}
+		}
+
 		//Insert query for database to user table
-		$sql = "INSERT INTO Users (Fname, Lname, Username, Upass, Funds, Address, Birthday, Email) VALUES (
+		$sql = "INSERT INTO Users (ID, Fname, Lname, Username, Upass, Funds, Address, Birthday, Email) VALUES (
+			'{$connection->real_escape_string($newID)}',
 			'{$connection->real_escape_string($_POST['Fname'])}',
 			'{$connection->real_escape_string($_POST['Lname'])}',
-			'{$connection->real_escape_string($_POST['Email'])}',
 			'{$connection->real_escape_string($_POST['Uname'])}',
-			{0},
+			'{$connection->real_escape_string($_POST['Upass'])}',
+			'{$connection->real_escape_string(0)}',
+			'{$connection->real_escape_string($_POST['Address'])}',
+			'{$connection->real_escape_string($_POST['Birthday'])}',
 			'{$connection->real_escape_string($_POST['Email'])}')";
 			$insert = $connection->query($sql);
 			$connection->close();
