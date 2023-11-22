@@ -2,6 +2,12 @@
     include("mainPopulate.php");
     session_start();
     $pop = new MPopulate();
+    if(isset($_SESSION['search'])){
+        $_SESSION['search'] = NULL;
+    }
+    if(isset($_SESSION['style'])){
+        $_SESSION['style'] = NULL;
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +31,7 @@
 
     <div class="navBar">
         <ul class="navList">
-            <li class="navItems"><a href="index.php">Home</a></li>
+            <li class="navItems"><a href="main.php">Home</a></li>
             <li class="navItems"><a href="???">Account</a></li>
             <li class="navItems"><a href="???">Recommendations</a></li>
             
