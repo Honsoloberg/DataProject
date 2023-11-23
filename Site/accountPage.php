@@ -1,22 +1,12 @@
-<?php
-    include("mainPopulate.php");
-    session_start();
-    $pop = new MPopulate();
-    if(isset($_SESSION['search'])){
-        $_SESSION['search'] = NULL;
-    }
-    if(isset($_SESSION['style'])){
-        $_SESSION['style'] = NULL;
-    }
-?>
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Food Ferry</title>
-    <link rel="stylesheet" href="nav.css">
-</head>
-<body>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Food Ferry</title>
+        <link rel="stylesheet" href="nav.css">
+    </head>
+
+    <body>
     <div>
         <img src="Food_Ferry.png" alt="Food Ferry" width="175" height="210" style="display:block;margin-left:auto;margin-right:auto;">
 
@@ -36,11 +26,5 @@
             
         </ul>
     </div>
-    <div>
-        <h2 style="text-align:center;">Nearby Restaurants</h2>
-        <?php
-            $pop->populate();
-        ?>        
-    </div>
-</body>
+    </body>
 </html>

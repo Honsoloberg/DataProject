@@ -35,8 +35,8 @@ if(!empty($_GET)){
   </div>
   <div class="navBar">
     <ul class="navList">
-        <li class="navItems"><a href="index.php">Home</a></li>
-        <li class="navItems"><a href="???">Account</a></li>
+        <li class="navItems"><a href="">Home</a></li>
+        <li class="navItems"><a href="">Account</a></li>
     </ul>
   </div>
 
