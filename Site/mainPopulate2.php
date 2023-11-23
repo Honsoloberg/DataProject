@@ -1,3 +1,0 @@
-<?php
-//FUCKING JUCK FILE     
-?>
