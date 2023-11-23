@@ -1,3 +1,12 @@
+<?php
+include("account.php");
+
+session_start();
+$account = new accountInfo();
+$account->pullInitial();
+
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -11,11 +20,11 @@
         <img src="Food_Ferry.png" alt="Food Ferry" width="175" height="210" style="display:block;margin-left:auto;margin-right:auto;">
 
         <?php
-        if (!empty($_SESSION["uname"])) {
-            echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, " . $_SESSION["uname"] . "</h3>";
-        } else {
-            echo "<h3 style='text-align:center;'> Welcome, User</h3>";
-        }
+            if (!empty($_SESSION["uname"])) {
+                echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, " . $_SESSION["uname"] . "</h3>";
+            } else {
+                echo "<h3 style='text-align:center;'> Welcome, User</h3>";
+            }
         ?>
     </div>
 
@@ -25,6 +34,24 @@
             <li class="navItems"><a href="accountPage.php">Account</a></li>
             
         </ul>
+    </div>
+    <div>
+        <h3>Funds:</h3>
+
+        <?php
+            if(isset($_POST['funds'])){
+                $account->addFunds();
+                unset($_POST['funds']);
+            }
+            $account->getFunds();
+        ?>
+
+        <form method="post" action="">
+            <label for="funds">Add Funds: </label>
+            <input type="number" name="funds" step="0.01">
+            <button type="submit">Add</button>
+        </form>
+
     </div>
     </body>
 </html>
