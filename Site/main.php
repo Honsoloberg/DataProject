@@ -42,5 +42,15 @@
             $pop->populate();
         ?>        
     </div>
+
+    <div>
+        <h2 style="text-align:center;">Restaurant Workload</h2>
+        <?php
+            $pop->popWait();
+        ?>
+
+    </div>
+
+    
 </body>
 </html>
