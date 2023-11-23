@@ -1,5 +1,5 @@
 create database dataproject;
-create user 'site'@'localhost';
+create user 'site'@'localhost' identified by 'password';
 flush privileges;
 
 GRANT SELECT, UPDATE, INSERT, DELETE ON dataproject.* to 'site'@'localhost';
