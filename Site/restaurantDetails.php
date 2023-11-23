@@ -281,45 +281,7 @@ if ($result->num_rows > 0) {
 
 
 
-$sql = "SELECT r.Rname AS RestaurantName, COUNT(o.ID) AS OrderCount, AVG(o.TotalPrice) AS AvgTotalPrice
-    FROM Orders o
-    JOIN Restaurant r ON o.RID = r.ID
-    WHERE (
-        SELECT AVG(i.Price)
-        FROM Items i
-        WHERE i.RID = o.RID
-    ) < ANY (
-        SELECT io.Price
-        FROM O_Items oi
-        JOIN Items io ON oi.Item_ID = io.ID
-        WHERE oi.O_ID = o.ID
-    )
-    GROUP BY r.Rname;";
 
-
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // Output data in a table
-    echo "<table border='1'>
-            <tr>
-                <th>Restaurant Name</th>
-                <th>Order Count</th>
-                <th>Average Total Price</th>
-            </tr>";
-
-    while ($row = $result->fetch_assoc()) {
-        echo "<tr>
-                <td>" . $row["RestaurantName"] . "</td>
-                <td>" . $row["OrderCount"] . "</td>
-                <td>" . $row["AvgTotalPrice"] . "</td>
-              </tr>";
-    }
-
-    echo "</table>";
-} else {
-    echo "0 results";
-}
 
 
 
