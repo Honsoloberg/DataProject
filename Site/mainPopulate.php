@@ -53,7 +53,7 @@ class Mpopulate extends config{
         
         if ($result->num_rows > 0) {
             // Output data in a table
-            echo "<table border='1'>
+            echo "<table border='1' style='margin-left:auto;margin-right:auto;text-align: center'>
                     <tr>
                         <th>Restaurant Name</th>
                         <th>Order Count</th>
@@ -76,8 +76,6 @@ class Mpopulate extends config{
             
     }
 
-
-
     public function popWhosDriverMyOrder(){
     $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
   
@@ -99,13 +97,8 @@ class Mpopulate extends config{
     $result = $conn->query($sql);
     $conn->close();
 
-
-
-
-
-    echo "<h2>Driver and Orders Data</h2>
-
-    <table border='1'>
+    echo "
+    <table border='1' style='margin-left:auto;margin-right:auto;text-align: center'>
     <tr>
         <th>Driver ID</th>
         <th>First Name</th>
@@ -118,8 +111,6 @@ class Mpopulate extends config{
         <th>Restaurant Name</th>
         <th>User Name</th>
     </tr>";
-
-    
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo "<tr>
@@ -142,6 +133,4 @@ class Mpopulate extends config{
    echo "</table>";
 
 }
-
-
 }?>
