@@ -114,22 +114,6 @@ switch ($_SESSION['style']) {
     <?php endif; ?>
 </div>
 
-
-
-<div>
-    <?php if (isset($_POST['get_top_list'])) : ?>
-        <h2 style="text-align:center;">Feeling Frivolous?</h2>
-        <!--Query 2-->
-        <?php $pop->popTopList(); ?>
-    <?php else : ?>
-        <form method="post" action="">
-            <input type="hidden" name="get_top_list" value="1">
-            <button type="submit">High Roller Items</button>
-        </form>
-    <?php endif; ?>
-</div>
-
-
 <div>
 
     <h2 style="text-align:left;">Wish to compare <?php echo $restaurantName; ?> with any other? </h2>
@@ -154,22 +138,6 @@ switch ($_SESSION['style']) {
 </div>
 
 
-<div>
-    <!--Query 7-->
-    <br>
-    <?php if (isset($_POST['get_rest_address'])) : ?>
-        <h2 style="text-align:center;"></h2>
-        <?php $pop->popRestAddress($restaurantName); ?>
-    <?php else : ?>
-        <form method="post" action="">
-            <button type="submit" name="get_rest_address">Get Restaurant Address</button>
-        </form>
-    <?php endif; ?>
-</div>
-
-
-
-    
 <div>
     <!--Query 9-->
     <?php if (isset($_POST['get_most_expensive'])) : ?>
@@ -314,7 +282,18 @@ function addNewRow() {
 }
 </script>
 
-
+<div>
+    <!--Query 7-->
+    <br>
+    <?php if (isset($_POST['get_rest_address'])) : ?>
+        <h2 style="text-align:center;"></h2>
+        <?php $pop->popRestAddress($restaurantName); ?>
+    <?php else : ?>
+        <form method="post" action="">
+            <button type="submit" name="get_rest_address">Get Restaurant Address</button>
+        </form>
+    <?php endif; ?>
+</div>
 
 </body>
 </html>

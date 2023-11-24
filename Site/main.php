@@ -50,8 +50,20 @@
         <?php
             $pop->popWait();
         ?>
-
     </div>
+
+    <div>
+    <?php if (isset($_POST['get_top_list'])) : ?>
+        <h2 style="text-align:center;">Feeling Frivolous?</h2>
+        <!--Query 2-->
+        <?php $pop->popTopList(); ?>
+    <?php else : ?>
+        <form method="post" action="">
+            <input type="hidden" name="get_top_list" value="1">
+            <button type="submit">High Roller Items</button>
+        </form>
+    <?php endif; ?>
+</div>
     
 </body>
 </html>
