@@ -80,7 +80,7 @@ switch ($_SESSION['style']) {
     <div id="image-container">
     <h1>Welcome to <?php echo $restaurantName; ?></h1>
     <?php
-        $imageName = $restaurantName . ".jpg";
+        $imageName = $restaurantName . ".png";
         echo "<img src='$imageName' alt='$restaurantName' id='restaurant-image'>";
     ?>
     </div>
