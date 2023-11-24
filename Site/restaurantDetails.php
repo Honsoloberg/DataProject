@@ -145,6 +145,7 @@ switch ($_SESSION['style']) {
     <form method="get" style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
         <label for="search">Search By Keyword:</label>
         <input type='hidden' name="style" value= "<?php echo $style ?>">
+        <input type='hidden' name="Clear" value= "<?php echo $Clear ?>">
         <input type="text" id="search" name="query" placeholder="What are you hungry for?">
         <button type="submit">Search</button> 
     </form>
