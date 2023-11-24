@@ -175,112 +175,43 @@ switch ($_SESSION['style']) {
         <input type="text" id="search" name="query" placeholder="What are you hungry for?">
         <button type="submit">Search</button> 
     </form>
-
-    <?php
-    if (isset($_GET['query'])) {
-    $searchTerm = $_GET['query'];
-    $searchTerm = $conn->real_escape_string($searchTerm);
-    $pop->popSearch($searchTerm,$restaurantName);}
-    ?>
     </div>
-            <div>
-           <form method='get' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
-            <input type='hidden' name='style' value= '<?php echo $style ?>'>
-            <input type='hidden' name='Clear' value='5'>
-            <button type='submit'>Clear Results</button>
-            </form>
-            </div>
+    <div>
+        <form method='get' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
+        <input type='hidden' name='style' value= '<?php echo $style ?>'>
+        <input type='hidden' name='Clear' value='5'>
+        <button type='submit'>Clear Results</button>
+        </form>
+    </div>
 
-<table border="1">
-    <thead>
-        <tr>
-
-            <th>Order Number</th>
-            <th>Restaurant</th>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Description</th>
-            <th>Price</th>
-        </tr>
-    </thead>
-    <tbody id="orderTableBody">
+    <table border="1">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+                if (isset($_GET['query']) && $_GET['query'] != "") {
+                    $searchTerm = $_GET['query'];
+                    $searchTerm = $conn->real_escape_string($searchTerm);
+                    $pop->popSearch($searchTerm,$restaurantName);
+                }
+            ?>
+            </tbody>
+    </table>
     <?php
-    // Check if $_SESSION["uname"] is set and not empty before using it
-    if (isset($_SESSION["uname"]) && !empty($_SESSION["uname"])) {
-        // Use the value stored in $_SESSION["uname"] as the username variable
-        $usernameVariable = $_SESSION["uname"];
-
-        $sql = "SELECT
-                O_Items.O_ID AS Order_Number,
-                O_Items.Quant AS Quantity,
-                Items.Iname AS ItemName,
-                Items.Decript AS Descriptions,
-                Items.Price,
-                Restaurant.Rname AS RestaurantName
-    
-            FROM
-                O_Items
-            JOIN
-                Items ON O_Items.Item_ID = Items.ID
-            JOIN
-                Orders ON O_Items.O_ID = Orders.ID
-            JOIN
-                Restaurant ON Orders.RID = Restaurant.ID
-            JOIN
-                Users ON Orders.UID = Users.ID
-            WHERE
-                Users.UserName = '$usernameVariable' AND
-                Restaurant.Rname = '$restaurantName'";
-                
-
-        $result = $conn->query($sql);
-        $conn->close();
-
-        // Check if there are results
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                echo '<tr>';
-                echo '<td>' . $row['Order_Number'] . '</td>';
-                echo '<td>' . $row['RestaurantName'] . '</td>';
-                echo '<td>' . $row['ItemName'] . '</td>';
-                echo '<td>' . $row['Quantity'] . '</td>';
-                echo '<td>' . $row['Descriptions'] . '</td>';
-                echo '<td>' . $row['Price'] . '</td>';
-                echo '</tr>';
-            }
-        } else {
-            echo '<tr><td colspan="5">No active orders found</td></tr>';
+        if(isset($_POST['OrderGEN'])){
+            $pop->genOrder($restaurantName);
         }
-    } else {
-        // Handle the case where $_SESSION["uname"] is not set or empty
-        echo '<tr><td colspan="5">Invalid username</td></tr>';
-    }
-
-
     ?>
-</tbody>
-</table>
-
-<!-- You can add a button or link to trigger the addition of a new row -->
-<button onclick="addNewRow()">Add Item to Order</button>
-
-<script>
-function addNewRow() {
-    // You can add logic here to fetch data or get input from the user
-    var newRowData = [' ', ' ', '', 0,'',0];
-
-    var tableBody = document.getElementById('orderTableBody');
-    var newRow = document.createElement('tr');
-
-    newRowData.forEach(function(value) {
-        var cell = document.createElement('td');
-        cell.textContent = value;
-        newRow.appendChild(cell);
-    });
-
-    tableBody.appendChild(newRow);
-}
-</script>
+    <form method="post" action="">
+        <input type="hidden" name="OrderGEN" value="5">
+        <button type="submit">Complete Order</button>
+    </form>
 
 <div>
     <!--Query 7-->

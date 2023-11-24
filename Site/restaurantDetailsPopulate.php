@@ -179,12 +179,13 @@ public function popFundsTable($localID){
         if ($result->num_rows > 0) {
             // Output data of each row
             echo "<table style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>";
-            echo "<tr><th style='border: 1px solid black;'>Item</th><th style='border: 1px solid black;'>Price</th></tr>";
+            echo "<tr><th style='border: 1px solid black;'>Item</th><th style='border: 1px solid black;'>Price</th><th style='border: 1px solid black;'>Description</th</tr>";
         
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
                 echo "<td style='border: 1px solid black;'>" . $row["Iname"] . "</td>";
                 echo "<td style='border: 1px solid black;'>$" . $row["Price"] . "</td>";
+                echo "<td style='border: 1px solid black;'>" . $row["Decript"] . "</td>";
                 echo "</tr>";
             }
         
@@ -269,57 +270,195 @@ public function popFundsTable($localID){
             WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '$searchTerm'";
         
         $result = $conn->query($sql);
-        $conn->close();
     
+        $row = $result->fetch_assoc();
         // Initialize $searchResults as an empty array
-        $searchResults = [];
-    
+        $searchResult = array("First");
+
+        if(isset($_GET['Clear'])){
+            $_SESSION['search'] = NULL;
+        }
+        if(isset($_SESSION['search'])){
+            $searchResult = $_SESSION['search'];
+        }
+
+        if(!array_search($row['Iname'], $searchResult)){
+            array_push($searchResult, $row['Iname']);
+            $_SESSION['search'] = $searchResult;
+        }
+
+
         if ($result->num_rows > 0) {
-            // Add each result to the searchResults array
-            if (!empty($_GET["Clear"])) {
-                unset($_SESSION['search']);
+
+            $sql = "INSERT INTO building_my_order (UID, Rname, Iname, Quant, Decript, Price) VALUES(
+                '{$conn->real_escape_string($_SESSION['uid'])}',
+                '{$conn->real_escape_string($restaurantName)}',
+                '{$conn->real_escape_string($row['Iname'])}',
+                '{$conn->real_escape_string(1)}',
+                '{$conn->real_escape_string($row['Decript'])}',
+                '{$conn->real_escape_string($row['Price'])}')";
+
+            try {
+                $conn->query($sql);
+            } catch (\Throwable $th) {
+                $sql = "UPDATE building_my_order
+                        SET Quant = Quant + 1
+                        WHERE UID = '" . $_SESSION['uid'] . "' AND Rname = '" . $restaurantName . "' AND Iname = '" . $row['Iname'] . "'";
+                $conn->query($sql);
             }
-    
-            if (isset($_SESSION['search'])) {
-                $searchResults = $_SESSION['search'];
-            }
-    
-            if ($_GET['query'] != "") {
-                while ($row = $result->fetch_assoc()) {
-                    $searchResults[] = [
-                        'name' => $row["Iname"],
-                        'price' => $row["Price"]
-                    ];
-                }
-                $_SESSION['search'] = $searchResults;
-            }
-        }
-////////////////////////////////////////////////////////////////////////////////////////////
-        // $seen["$searchResult['name']"] = 1
-        // $seen["$searchResult['name']"] += 1
+            
         
-        // $seen[] = NULL;
-        // if(isset($seen["$_GET['']"])){
-        //     $seen["$searchResult['name']"] += 1
-        // }else{
-        //     $seen["$searchResult['name']"] = 1
-        // }
-////////////////////////////////////////////////////////////////////////////////////////////
-    
-        echo "<table border='1' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>";
-        echo "<tr><th>Item</th><th>Price</th></tr>";
-    
-        foreach ($searchResults as $result) {
-            echo "<tr>
-                <td>" . $result['name'] . "</td>
-                <td>" . $result['price'] . "</td>
-            </tr>";
+        $quant[] = NULL;
+
+        if(isset($_SESSION['quant'])){
+            $quant = $_SESSION['quant'];
         }
-    
-        echo "</table>";
+        foreach ($searchResult as $value){
+            $sql = "SELECT count(Iname)
+                    FROM building_my_order
+                    WHERE UID = '" . $_SESSION['uid'] ."' AND Iname = '" . $value . "'";
+
+            $result = $conn->query($sql);
+            $items = $result->fetch_assoc();
+
+            foreach($items as $var){
+                $quant[$value] = $var;
+            }
+
+        }
+        $_SESSION['quant'] = $quant;
+
+        $sql = "SELECT * FROM items AS I, Restaurant AS R WHERE I.RID = R.ID AND R.Rname = '" . $restaurantName . "'";
+
+        $result = $conn->query($sql);
+
+        for($i = 0; $i<count($searchResult); $i++){
+            while($row = $result->fetch_assoc()){
+                if(array_search($row['Iname'], $searchResult) >= 0 && array_search($row['Iname'], $searchResult) != FALSE){
+                    $remove = "<form method='post' action=''>
+                    <input type='hidden' name='order' value='". $row["Iname"] ."'>
+                    <button type=submit>Cancel</button>
+                    </form>";
+
+                    echo "<tr>";
+
+                    echo "<td>" . $row['Iname'] . "</td>
+                        <td>" . $quant[$row['Iname']] . "</td>
+                        <td>" . $row['Price'] . "</td>
+                        <td>" . $remove . "</td>";
+
+                    echo "</tr>";
+                }
+            }
+        }
+        $conn->close();
     }
-}  
-   
+}
 
+    public function genOrder($restaurantName){
+        $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
 
-  ?>
+        $sql = "SELECT ID FROM driver ORDER BY RAND() LIMIT 1";
+        $result = $conn->query($sql);
+
+        $row = $result->fetch_assoc();
+        $driver = $row['ID'];
+
+        $sql = "SELECT * FROM building_my_order WHERE UID = '" . $_SESSION['uid'] . "'";
+        $items = $conn->query($sql);
+        $BUILDitems = array();
+
+        while($row = $items->fetch_assoc()){
+            array_push($BUILDitems, $row);
+        }
+
+        $totalPrice = 0;
+
+        while($row = $items->fetch_assoc()){
+            $var = (double)$row['Price'] * (int)$rowp['Quant'];
+            $totalPrice += $var;
+        }
+
+        $sql = "SELECT ID FROM restaurant WHERE Rname = '" . $restaurantName ."'";
+        $result = $conn->query($sql);
+        $row = $result->fetch_assoc();
+        $RID = $row['ID'];
+
+        $newID = $this->createOrderID();
+
+        $sql = "INSERT INTO orders (ID, TotalPrice, RID, DID, UID) VALUES (
+            '{$conn->real_escape_string($newID)}',
+            '{$conn->real_escape_string($totalPrice)}',
+            '{$conn->real_escape_string($RID)}',
+            '{$conn->real_escape_string($driver)}',
+            '{$conn->real_escape_string($_SESSION['uid'])}')";
+        try {
+            $conn->query($sql);
+        } catch(\Throwable $th){
+            echo "Failed to generate order";
+            echo $conn->error;
+        }
+
+        $sql = "SELECT ID FROM orders
+                WHERE TotalPrice = '" . $totalPrice . "' AND RID = '" . $RID . "' AND DID = '" . $driver . "' AND UID = '" . $_SESSION['uid'] . "'";
+        
+        $result = $conn->query($sql);
+        $row = $result->fetch_assoc();
+        $OID = $row['ID'];
+
+        $sql = "SELECT * FROM items WHERE RID = '" . $RID . "'";
+
+        $items = $conn->query($sql);
+
+        $IID = array();
+
+        while($row = $items->fetch_assoc()){
+            foreach($BUILDitems as $BI){
+                if($BI['Iname'] == $row['Iname']){
+                    array_push($IID, $row['ID']);
+                }
+            }
+        }
+
+        $i = 0;
+        foreach($BUILDitems as $BI){
+            $sql = "INSERT INTO O_Items (O_ID, Item_ID, Quant) VALUES (
+                '{$conn->real_escape_string($OID)}',
+                '{$conn->real_escape_string($IID[$i])}',
+                '{$conn->real_escape_string($BI['Quant'])}')";
+            $conn->query($sql);
+            $i++;
+        }
+    }
+
+    private function createOrderID(){
+		//Creates connection to database
+		$connection = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+
+		$sql = "SELECT ID FROM orders";
+		$result = $connection->query($sql);
+
+		while($row = $result->fetch_assoc()){
+			$uIDS[] = $row['ID'];
+		}
+
+		$newID = rand(0, 999999);
+
+		while(TRUE){
+			$flag = FALSE;
+			foreach($uIDS as $check){
+				if($newID == $check){
+					$newID = rand(0, 999999);
+					$flag = TRUE;
+					break;
+				}
+			}
+			if(!$flag){
+				break;
+			}
+		}
+
+        return $newID;
+    }
+} 
+?>

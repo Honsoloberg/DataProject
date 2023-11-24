@@ -1,6 +1,11 @@
 <?php
     include("mainPopulate.php");
+    include("clearOrder.php");
+
     session_start();
+    $clear = new clearOrder();
+    $clear->clearOrder();
+
     $pop = new MPopulate();
     if(isset($_SESSION['search'])){
         $_SESSION['search'] = NULL;
@@ -8,6 +13,8 @@
     if(isset($_SESSION['style'])){
         $_SESSION['style'] = NULL;
     }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
