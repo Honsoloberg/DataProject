@@ -1,6 +1,7 @@
 <?php
-include("config.php");
+include ("restaurantDetailsPopulate.php");
 session_start();
+$pop = new rDetailsPop();
 
 $config = new Config();
 $conn = new mysqli($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname);
