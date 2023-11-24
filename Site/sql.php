@@ -1,141 +1,7 @@
-<?php
-include ("restaurantDetailsPopulate.php");
-session_start();
-$pop = new rDetailsPop();
-
-$config = new Config();
-$conn = new mysqli($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-if(!isset($_SESSION['style'])){
-    $_SESSION['style'] = $_GET['Rname'];
-}
-
-
-switch ($_SESSION['style']) {
-    case "Starbucks":
-        $restaurantName = "Starbucks";
-        $style = 1;
-        break;
-    case "Wendys":
-        $restaurantName = "Wendys";
-        $style = 2;
-        break;
-    case "Osmows":
-        $restaurantName = "Osmows";
-        $style = 3;
-        break;
-    case "Tim Hortons":
-        $restaurantName = "Tim Hortons";
-        $style = 4;
-        break;
-    case "Mary Browns":
-        $restaurantName = "Mary Browns";
-        $style = 5;
-        break;
-    case "McDonalds":
-        $restaurantName = "McDonalds";
-        $style = 6;
-        break;
-    // Add more cases if needed
-
-    default:
-        $restaurantName = "Unknown Restaurant";
-        }  
-        $sortOrder = "ASC"; 
-        $searchResults = [];
-
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title><?php echo $restaurantName; ?></title>
-    <style>
-        /* Add your CSS styles here */
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        /* Style the image container */
-        #image-container {
-            text-align: center;
-        }
-
-        /* Style the image */
-        #restaurant-image {
-            width: 100%;
-            max-width: 600px; /* Adjust the maximum width as needed */
-            height: auto;
-        }
-    </style>
-    <link rel="stylesheet" href="nav.css">
-</head>
-<body>
-
-    <div id="image-container">
-    <h1>Welcome to <?php echo $restaurantName; ?></h1>
-    <?php
-        $imageName = $restaurantName . ".jpg";
-        echo "<img src='$imageName' alt='$restaurantName' id='restaurant-image'>";
-    ?>
-    </div>
-    <div class="navBar">
-        <ul class="navList">
-            <li class="navItems"><a href="main.php">Home</a></li>
-            <li class="navItems"><a href="accountPage.php">Account</a></li>
-        </ul>
-    </div>
-
-    <div>
-        <h2 style="text-align:center;">Query 8</h2>
-        <?php
-            $pop->popAllItems($restaurantName);
-        ?>        
-    </div>
-
-    <div>
-        <h2 style="text-align:center;">Query 2</h2>
-        <?php
-            $pop->popTopList();
-        ?>        
-    </div>
-
-    <div>
-        <h2 style="text-align:center;">Query 5</h2>
-        <?php
-        $restaurantName1 = "";
-        $restaurantName2 = "";
-            $pop->popCompareList($restaurantName1,$restaurantName2);
-        ?>        
-    </div>
-
-    <div>
-        <h2 style="text-align:center;">Query 7</h2>
-        <?php
-       
-            $pop->popRestAddress($restaurantName);
-        ?>        
-    </div>
-
-    
-    <div>
-        <h2 style="text-align:center;">Query 9</h2>
-        <?php
-       
-            $pop->popMostExpensive($restaurantName);
-        ?>        
-    </div>
 
 
 
-
-
-    <div>
+<div>
     <form method="get">
         <label for="search">Search By Keyword:</label>
         <input type='hidden' name="style" value= "<?php echo $style ?>">
@@ -155,6 +21,8 @@ if (isset($_GET['query'])) {
         $sortOrder = $_GET['sort'];
     }
 
+
+
     $sql = "SELECT Items.*
             FROM Items
             INNER JOIN Restaurant ON Items.RID = Restaurant.ID
@@ -165,22 +33,156 @@ if (isset($_GET['query'])) {
 
     if ($result->num_rows > 0) {
         // Add each result to the searchResults array
-        if(isset($_SESSION['search'])){
-            $searchResults = $_SESSION['search'];
-        }
-        if($_GET['query'] != ""){
-            while ($row = $result->fetch_assoc()) {
-                $searchResults[] = [
-                    'name' => $row["Iname"],
-                    'price' => $row["Price"]
-                ];
-            }
-            $_SESSION['search'] = $searchResults;
+        while ($row = $result->fetch_assoc()) {
+            $searchResults[] = [
+                'name' => $row["Iname"],
+                'price' => $row["Price"]
+            ];
         }
     }
-
 }
 ?>
+
+<?php
+
+$sql = "SELECT R.Rname, I.Iname AS ItemName, I.Price AS MaxPrice
+        FROM Restaurant R
+        JOIN Items I ON R.ID = I.RID
+        WHERE R.Rname = '$restaurantName'
+        AND I.Price = (SELECT MAX(Price) FROM Items WHERE RID = R.ID)";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Output data in a table
+    echo "<table border='1'>
+            <tr>
+                <th>Restaurant Name</th>
+                <th>Item Name</th>
+                <th>Max Price</th>
+            </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" . $row["Rname"] . "</td>
+                <td>" . $row["ItemName"] . "</td>
+                <td>" . $row["MaxPrice"] . "</td>
+              </tr>";
+    }
+
+    echo "</table>";
+} else {
+    echo "0 results";
+}
+
+
+
+
+// Query 4) View 4: Uses a FULL JOIN 
+$sql = "SELECT Driver.ID, Driver.Fname, Driver.Lname, Driver.CarModel, Driver.Plate, Driver.Insurance,
+           Orders.ID AS OrderID, Orders.TotalPrice, Restaurant.Rname AS RestaurantName, Users.Fname AS UserName
+        FROM Driver
+        LEFT JOIN Orders ON Driver.ID = Orders.DID
+        LEFT JOIN Restaurant ON Orders.RID = Restaurant.ID
+        LEFT JOIN Users ON Orders.UID = Users.ID
+        UNION
+        SELECT Driver.ID, Driver.Fname, Driver.Lname, Driver.CarModel, Driver.Plate, Driver.Insurance,
+            Orders.ID AS OrderID, Orders.TotalPrice, Restaurant.Rname AS RestaurantName, Users.Fname AS UserName
+        FROM Driver
+        RIGHT JOIN Orders ON Driver.ID = Orders.DID
+        LEFT JOIN Restaurant ON Orders.RID = Restaurant.ID
+        LEFT JOIN Users ON Orders.UID = Users.ID;
+";
+
+$result = $conn->query($sql);
+
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver and Orders Data</title>
+</head>
+<body>
+
+<h2>Driver and Orders Data</h2>
+
+<table border='1'>
+    <tr>
+        <th>Driver ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Car Model</th>
+        <th>Plate</th>
+        <th>Insurance</th>
+        <th>Order ID</th>
+        <th>Total Price</th>
+        <th>Restaurant Name</th>
+        <th>User Name</th>
+    </tr>
+
+    <?php
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>" . $row["ID"] . "</td>
+                    <td>" . $row["Fname"] . "</td>
+                    <td>" . $row["Lname"] . "</td>
+                    <td>" . $row["CarModel"] . "</td>
+                    <td>" . $row["Plate"] . "</td>
+                    <td>" . $row["Insurance"] . "</td>
+                    <td>" . $row["OrderID"] . "</td>
+                    <td>" . $row["TotalPrice"] . "</td>
+                    <td>" . $row["RestaurantName"] . "</td>
+                    <td>" . $row["UserName"] . "</td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='10'>0 results</td></tr>";
+    }
+    ?>
+</table>
+
+
+<h2>User Data</h2>
+
+
+// Query 6 Query for user funds
+<?php
+$localID = $_SESSION["uname"];
+
+$sql = "SELECT Funds, Fname, Lname, UserName
+        FROM Users
+        WHERE UserName = '$localID'";
+
+$result = $conn->query($sql);
+?>
+
+<table border='1'>
+    <tr>
+        <th>Funds</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>User Name/th>
+    </tr>
+    <?php
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>" . $row["Funds"] . "</td>
+                    <td>" . $row["Fname"] . "</td>
+                    <td>" . $row["Lname"] . "</td>
+                    <td>" . $row["UserName"] . "</td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='3'>0 results</td></tr>";
+    }
+    ?>
+</table>
 
 <div>
     <p>Sort by Price:</p>
@@ -209,7 +211,6 @@ if (isset($_GET['query'])) {
             </form>
 
 </div>
-
 
 <h2>Active Orders</h2>
 
@@ -282,32 +283,6 @@ if (isset($_GET['query'])) {
 </table>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- You can add a button or link to trigger the addition of a new row -->
 <button onclick="addNewRow()">Add Item to Oder</button>
 
@@ -330,29 +305,6 @@ function addNewRow() {
 </script>
 
 
-<div>
-    <h2>Other Nearby Restaurants</h2>
-    <?php
-    $sql = "SELECT Rname FROM restaurant";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        echo "<ul>";
-        while ($row = $result->fetch_assoc()) {
-            $otherRestaurantName = $row["Rname"];
-            if ($otherRestaurantName != $restaurantName) {
-                echo "<li><a href='main.php?restaurantName=" . urlencode($otherRestaurantName) . "'>" . $otherRestaurantName . "</a></li>";
-            }
-        }
-        echo "</ul>";
-    } else {
-        echo "0 results";
-    }
-
-    // Close the database connection
-    $conn->close();
-    ?>
-</div>
 
 </body>
 </html>
