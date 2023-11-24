@@ -127,14 +127,28 @@ switch ($_SESSION['style']) {
 </div>
 
 
-    <div>
-        <h2 style="text-align:center;">Query 5</h2>
-        <?php
-        $restaurantName1 = "";
-        $restaurantName2 = "";
-            $pop->popCompareList($restaurantName1,$restaurantName2);
-        ?>        
-    </div>
+<div>
+    <h2 style="text-align:center;">Query 5</h2>
+
+    <form method="post" action="">
+        <input type="radio" name="restaurant" value="Starbucks"> Starbucks
+        <input type="radio" name="restaurant" value="Wendys"> Wendys
+        <input type="radio" name="restaurant" value="Osmows"> Osmows
+        <input type="radio" name="restaurant" value="Tim Hortons"> Tim Hortons
+        <input type="radio" name="restaurant" value="Mary Browns"> Mary Browns
+        <input type="radio" name="restaurant" value="McDonalds"> McDonalds
+        <button type="submit" name="compare_restaurants">Compare</button>
+    </form>
+
+    <?php
+    if (isset($_POST['compare_restaurants'])) {
+        $restaurantName1 = $restaurantName;
+        $restaurantName2 = $_POST['restaurant'];
+        $pop->popCompareList($restaurantName1, $restaurantName2);
+    }
+    ?>
+</div>
+
 
     <div>
         <h2 style="text-align:center;">Query 7</h2>
