@@ -90,32 +90,13 @@ switch ($_SESSION['style']) {
             <li class="navItems"><a href="accountPage.php">Account</a></li>
         </ul>
     </div>
-    <?php
 
-    // SQL query to retrieve items based on the provided restaurant name
-    $sql = "SELECT Items.*
-        FROM Items
-        INNER JOIN Restaurant ON Items.RID = Restaurant.ID
-        WHERE Restaurant.Rname = '$restaurantName'";
-
-// Execute the query
-$result = $conn->query($sql);
-
-// Check if there are results
-if ($result->num_rows > 0) {
-    // Output data of each row
-    echo "<ul>";
-    echo "<strong>Featured Items</strong>";
-    while ($row = $result->fetch_assoc()) {
-        echo "<li>";
-        echo "Item: " . $row["Iname"] . ", Price: $" . $row["Price"];
-        echo "</li>";
-    }
-    echo "</ul>";
-} else {
-    echo "No items found for the provided restaurant name.";
-}
-?>
+    <div>
+        <h2 style="text-align:center;">Featured Items</h2>
+        <?php
+            $pop->popAllItems($restaurantName);
+        ?>        
+    </div>
 
 
 <div>
@@ -192,22 +173,6 @@ if (isset($_GET['query'])) {
             </form>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <h2>Active Orders</h2>
