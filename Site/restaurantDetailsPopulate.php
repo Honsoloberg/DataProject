@@ -104,15 +104,17 @@ public function popOrderList($usernameVariable){
  // Query 5) Uses nested queries with any of the set operations UNION, to combine items form different restuarants to compare items from to restaurants
  public function popCompareList($restaurantName1,$restaurantName2){
     $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+    
+    
     $sql = "SELECT Items.ID, Items.Iname, Items.Price, Restaurant.Rname
         FROM Items
         LEFT JOIN Restaurant ON Items.RID = Restaurant.ID
-        WHERE Items.RID = 253617
+        WHERE Restaurant.Rname = '$restaurantName1'
         UNION
         SELECT Items.ID, Items.Iname, Items.Price, Restaurant.Rname
         FROM Items
         LEFT JOIN Restaurant ON Items.RID = Restaurant.ID
-        WHERE Items.RID = 266291";
+        WHERE Restaurant.Rname = '$restaurantName2'";
     $result = $conn->query($sql);
     $conn->close();
 
