@@ -4,7 +4,7 @@ include("config.php");
 class accountInfo extends config{
 
     private $funds = 0.0;
-    private $address = NULL;
+    private $address = "";
 
     public function pullInitial(){
 
@@ -24,7 +24,7 @@ class accountInfo extends config{
 
     public function getFunds(){
 
-        echo "<p>Current Funds: $" . $this->funds . "</p>";
+        echo "<p style='padding-bottom:10px;'>Current Funds: $" . $this->funds . "</p>";
     }
 
     public function addFunds(){
@@ -42,6 +42,10 @@ class accountInfo extends config{
         $conn->close();
 
         header("Location: accountPage.php");
+    }
+
+    public function getAddress(){
+        echo "<p>Current Delivery Address: " . $this->address . "</p>";
     }
 }
 ?>

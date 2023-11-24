@@ -1,7 +1,13 @@
 <?php
-if(!empty($_GET)){
+session_start();
+if(isset($_GET['locality']) && $_GET['locality'] != "Oshawa"){
+  $_SESSION["err"] = TRUE;
+}
+
+if(!empty($_GET) && !$_SESSION['err']){
     $name = "ferryLocation";
-    $value = $_GET['ship-address'].$_GET['locality'].$_GET['state'].$_GET['postcode'];
+    $value = "address=". $_GET['ship-address'] . "&" . "city=" . $_GET['locality'] . "&" . "state=" . $_GET['state'] . "&" . "postcode=" . $_GET['postcode'];
+    $value = $_GET['ship-address'].":".$_GET['locality'].":".$_GET['state'].":".$_GET['postcode'];
     setcookie($name, $value, time() + (86400*30), "/");
     header("Location: main.php");
 }
@@ -27,9 +33,9 @@ if(!empty($_GET)){
       <img src="Food_Ferry.png"  alt="Food Ferry" width="175" height="210" style="display:block;margin-left:auto;margin-right:auto;">
       <?php
           if(!empty($_SESSION["uname"])){
-          echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, ". $_SESSION["uname"]."</h3>";
+            echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, ". $_SESSION["uname"]."</h3>";
           }else {
-              echo "<h3 style='text-align:center;'> Welcome, User</h3>";
+            echo "<h3 style='text-align:center;'> Welcome, User</h3>";
           }
       ?>
   </div>
@@ -39,9 +45,17 @@ if(!empty($_GET)){
         <li class="navItems"><a href="">Account</a></li>
     </ul>
   </div>
+  <div>
+    <?php
+      if($_SESSION["err"]){
+        echo "<p style='color:red;text-align:center;'>Please Enter an Oshawa Address</p>";
+        $_SESSION["err"] = FALSE;
+      }
+    ?>
+  </div>
 
     <form id="address-form" action="" method="get" autocomplete="off" style="display:block;margin-left:auto;margin-right:auto;">
-      <p class="title">Sample address form for North America</p>
+      <p class="title">Address form</p>
       <p class="note"><em>* = required field</em></p>
       <label class="full-field">
         <!-- Avoid the word "address" in id, name, or label text to avoid browser autofill from conflicting with Place Autocomplete. Star or comment bug https://crbug.com/587466 to request Chromium to honor autocomplete="off" attribute. -->
