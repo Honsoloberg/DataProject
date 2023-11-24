@@ -1,8 +1,8 @@
 <?php
-include("");
+include("order.php");
 session_start();
 
-
+$order = new order();
 ?>
 
 <!DOCTYPE html>
@@ -35,7 +35,8 @@ session_start();
     </div>
     <br>
 
-    <table>
+    <h3 style='text-align:center;padding-bottom:20px;'>Orders</h3>
+    <table border=1 style='margin:0 auto;text-align:center;'>
         <tr>
             <th>Order Number</th>
             <th>Restaurant</th>
@@ -44,6 +45,9 @@ session_start();
             <th>Drivers Car</th>
             <th>Drivers Plate</th>
             <th>Cancellation</th>
+            <?php
+                $order->populate();
+            ?>
         </tr>
         
     </table>
