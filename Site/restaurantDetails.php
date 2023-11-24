@@ -150,30 +150,45 @@ switch ($_SESSION['style']) {
 </div>
 
 
-    <div>
+<div>
+    <?php if (isset($_POST['get_rest_address'])) : ?>
         <h2 style="text-align:center;">Query 7</h2>
-        <?php
-       
-            $pop->popRestAddress($restaurantName);
-        ?>        
-    </div>
+        <?php $pop->popRestAddress($restaurantName); ?>
+    <?php else : ?>
+        <form method="post" action="">
+            <button type="submit" name="get_rest_address">Get Restaurant Address</button>
+        </form>
+    <?php endif; ?>
+</div>
+
+
 
     
-    <div>
+<div>
+    <?php if (isset($_POST['get_most_expensive'])) : ?>
         <h2 style="text-align:center;">Query 9</h2>
-        <?php
-       
-            $pop->popMostExpensive($restaurantName);
-        ?>        
-    </div>
+        <?php $pop->popMostExpensive($restaurantName); ?>
+    <?php else : ?>
+        <form method="post" action="">
+            <input type="hidden" name="get_most_expensive" value="1">
+            <button type="submit">Get Most Expensive</button>
+        </form>
+    <?php endif; ?>
+</div>
 
-    <div>
+
+<div>
+    <?php if (isset($_POST['get_least_expensive'])) : ?>
         <h2 style="text-align:center;">Query 10</h2>
-        <?php
-       
-            $pop->popLeastExpensive($restaurantName);
-        ?>        
-    </div>
+        <?php $pop->popLeastExpensive($restaurantName); ?>
+    <?php else : ?>
+        <form method="post" action="">
+            <input type="hidden" name="get_least_expensive" value="1">
+            <button type="submit">Get Least Expensive</button>
+        </form>
+    <?php endif; ?>
+</div>
+
     
     <div>
     <br>
