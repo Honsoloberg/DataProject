@@ -165,15 +165,6 @@ switch ($_SESSION['style']) {
             </form>
             </div>
 
-
-    <div>
-        <h2 style="text-align:center;">Query 1</h2>
-        <?php
-       
-            $pop->popOrderList($restaurantName);
-        ?>        
-    </div>
-
 <table border="1">
     <thead>
         <tr>
