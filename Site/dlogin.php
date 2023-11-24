@@ -41,6 +41,8 @@ class dlogin extends config{
 				$connection->close();
 				header("Location: locationMap.php");
 				return 0;
+			} else {
+				
 			}
 
 			$connection->close();
