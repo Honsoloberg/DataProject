@@ -331,40 +331,21 @@ public function popFundsTable($localID){
         
         echo "<table border='1' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>";
         echo "<tr><th>Item</th><th>Price</th></tr>";
-        <?php foreach ($searchResults as $result) { ?>
-            <tr>
-                <td><?php echo $result['name']; ?></td>
-                <td>$<?php echo $result['price']; ?></td>
+        foreach ($searchResults as $result) { 
+            echo"<tr>
+                <td>" .$result['name']."</td>
+                <td>". $result['price']."</td>
             </tr>
-        <?php } ?>
+        }
     </table>";
     
     
-    
+  
     }
+ }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-?>
 }
+   
+
+
+  ?>
