@@ -299,25 +299,30 @@ public function popFundsTable($localID){
         }
     }
     
-    public function popSearch($searchTerm,$restaurantName){
+    public function popSearch($searchTerm, $restaurantName) {
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
         $sql = "SELECT Items.*
-        FROM Items
-        INNER JOIN Restaurant ON Items.RID = Restaurant.ID
-        WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '$searchTerm'";
+            FROM Items
+            INNER JOIN Restaurant ON Items.RID = Restaurant.ID
+            WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '$searchTerm'";
         
         $result = $conn->query($sql);
         $conn->close();
+    
+        // Initialize $searchResults as an empty array
+        $searchResults = [];
+    
         if ($result->num_rows > 0) {
             // Add each result to the searchResults array
-            if(!empty($_GET["Clear"])){
+            if (!empty($_GET["Clear"])) {
                 unset($_SESSION['search']);
-                echo "qwerqwer";
             }
-            if(isset($_SESSION['search'])){
+    
+            if (isset($_SESSION['search'])) {
                 $searchResults = $_SESSION['search'];
             }
-            if($_GET['query'] != ""){
+    
+            if ($_GET['query'] != "") {
                 while ($row = $result->fetch_assoc()) {
                     $searchResults[] = [
                         'name' => $row["Iname"],
@@ -327,24 +332,20 @@ public function popFundsTable($localID){
                 $_SESSION['search'] = $searchResults;
             }
         }
-
-        
+    
         echo "<table border='1' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>";
         echo "<tr><th>Item</th><th>Price</th></tr>";
-        foreach ($searchResults as $result) { 
-            echo"<tr>
-                <td>" .$result['name']."</td>
-                <td>". $result['price']."</td>
-            </tr>
+    
+        foreach ($searchResults as $result) {
+            echo "<tr>
+                <td>" . $result['name'] . "</td>
+                <td>" . $result['price'] . "</td>
+            </tr>";
         }
-    </table>";
     
-    
-  
+        echo "</table>";
     }
- }
-
-}
+}  
    
 
 
