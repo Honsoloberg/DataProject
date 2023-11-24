@@ -45,37 +45,6 @@ if (isset($_GET['query'])) {
 
 <?php
 
-$sql = "SELECT R.Rname, I.Iname AS ItemName, I.Price AS MaxPrice
-        FROM Restaurant R
-        JOIN Items I ON R.ID = I.RID
-        WHERE R.Rname = '$restaurantName'
-        AND I.Price = (SELECT MAX(Price) FROM Items WHERE RID = R.ID)";
-
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // Output data in a table
-    echo "<table border='1'>
-            <tr>
-                <th>Restaurant Name</th>
-                <th>Item Name</th>
-                <th>Max Price</th>
-            </tr>";
-
-    while ($row = $result->fetch_assoc()) {
-        echo "<tr>
-                <td>" . $row["Rname"] . "</td>
-                <td>" . $row["ItemName"] . "</td>
-                <td>" . $row["MaxPrice"] . "</td>
-              </tr>";
-    }
-
-    echo "</table>";
-} else {
-    echo "0 results";
-}
-
-
 
 
 // Query 4) View 4: Uses a FULL JOIN 

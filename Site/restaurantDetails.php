@@ -131,12 +131,27 @@ switch ($_SESSION['style']) {
         ?>        
     </div>
 
+    <div>
+        <h2 style="text-align:center;">Query 10</h2>
+        <?php
+       
+            $pop->popLeastExpensive($restaurantName);
+        ?>        
+    </div>
 
+    <div>
+        <h2 style="text-align:center;">Query 10</h2>
+        <?php
+       
+            $pop->popLeastExpensive($restaurantName);
+        ?>        
+    </div>
 
 
 
     <div>
-    <form method="get">
+    <br>
+    <form method="get" style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
         <label for="search">Search By Keyword:</label>
         <input type='hidden' name="style" value= "<?php echo $style ?>">
         <input type="text" id="search" name="query" placeholder="What are you hungry for?">
@@ -146,11 +161,10 @@ switch ($_SESSION['style']) {
 
     <?php
 
-if (isset($_GET['query'])) {
+    if (isset($_GET['query'])) {
     $searchTerm = $_GET['query'];
     $searchTerm = $conn->real_escape_string($searchTerm);
     
-
     if (isset($_GET['sort'])) {
         $sortOrder = $_GET['sort'];
     }
@@ -182,17 +196,7 @@ if (isset($_GET['query'])) {
 }
 ?>
 
-<div>
-    <p>Sort by Price:</p>
-    <form method='get'>
-    <input type='hidden' name="style" value="<?php echo $style ?>">
-    <input type='hidden' name="query" value="<?php echo isset($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>">
-    <button type='submit' name='sort' value='ASC'>Lowest to Highest</button>
-    <button type='submit' name='sort' value='DESC'>Highest to Lowest</button>
-    </form>
 
-
-</div>
 
 <table border='1'>
     <tr><th>Item</th><th>Price</th></tr>
@@ -331,7 +335,7 @@ function addNewRow() {
 
 
 <div>
-    <h2>Other Nearby Restaurants</h2>
+    <h2>Click on any of the Restaurants below to go back to the home page</h2>
     <?php
     $sql = "SELECT Rname FROM restaurant";
     $result = $conn->query($sql);
