@@ -297,6 +297,74 @@ public function popFundsTable($localID){
         } else {
             echo "0 results";
         }
-    }  
-}
+    }
+    
+    public function popSearch($searchTerm,$restaurantName){
+        $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+        $sql = "SELECT Items.*
+        FROM Items
+        INNER JOIN Restaurant ON Items.RID = Restaurant.ID
+        WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '$searchTerm'";
+        
+        $result = $conn->query($sql);
+        $conn->close();
+        if ($result->num_rows > 0) {
+            // Add each result to the searchResults array
+            if(!empty($_GET["Clear"])){
+                unset($_SESSION['search']);
+                echo "qwerqwer";
+            }
+            if(isset($_SESSION['search'])){
+                $searchResults = $_SESSION['search'];
+            }
+            if($_GET['query'] != ""){
+                while ($row = $result->fetch_assoc()) {
+                    $searchResults[] = [
+                        'name' => $row["Iname"],
+                        'price' => $row["Price"]
+                    ];
+                }
+                $_SESSION['search'] = $searchResults;
+            }
+        }
+
+        
+        echo "<table border='1' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>";
+        echo "<tr><th>Item</th><th>Price</th></tr>";
+        <?php foreach ($searchResults as $result) { ?>
+            <tr>
+                <td><?php echo $result['name']; ?></td>
+                <td>$<?php echo $result['price']; ?></td>
+            </tr>
+        <?php } ?>
+    </table>";
+    
+    
+    
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>
+}

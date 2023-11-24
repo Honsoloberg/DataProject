@@ -145,60 +145,24 @@ switch ($_SESSION['style']) {
         <label for="search">Search By Keyword:</label>
         <input type='hidden' name="style" value= "<?php echo $style ?>">
         <input type="text" id="search" name="query" placeholder="What are you hungry for?">
-        <button type="submit">Search</button>
-        
+        <button type="submit">Search</button> 
     </form>
 
     <?php
     if (isset($_GET['query'])) {
     $searchTerm = $_GET['query'];
     $searchTerm = $conn->real_escape_string($searchTerm);
-    
-    if (isset($_GET['sort'])) {
-        $sortOrder = $_GET['sort'];
-    }
-
-    $sql = "SELECT Items.*
-            FROM Items
-            INNER JOIN Restaurant ON Items.RID = Restaurant.ID
-            WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '%$searchTerm%'
-            ORDER BY Items.Price $sortOrder";
-
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        // Add each result to the searchResults array
-        if(isset($_SESSION['search'])){
-            $searchResults = $_SESSION['search'];
-        }
-        if($_GET['query'] != ""){
-            while ($row = $result->fetch_assoc()) {
-                $searchResults[] = [
-                    'name' => $row["Iname"],
-                    'price' => $row["Price"]
-                ];
-            }
-            $_SESSION['search'] = $searchResults;
-        }
-    }
-}
-?>
-
-<table border='1' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
-    <tr><th>Item</th><th>Price</th></tr>
-    <?php foreach ($searchResults as $result) { ?>
-        <tr>
-            <td><?php echo $result['name']; ?></td>
-            <td>$<?php echo $result['price']; ?></td>
-        </tr>
-    <?php } ?>
-</table>
+    $pop->popSearch($searchTerm,$restaurantName);}
+    ?>
+    </div>
+            <div>
            <form method='get' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
             <input type='hidden' name='style' value= '<?php echo $style ?>'>
+            <input type='hidden' name='Clear' value='5'>
             <button type='submit'>Clear Results</button>
             </form>
+            </div>
 
-</div>
 
     <div>
         <h2 style="text-align:center;">Query 1</h2>
@@ -246,7 +210,7 @@ switch ($_SESSION['style']) {
             JOIN
                 Users ON Orders.UID = Users.ID
             WHERE
-                Users.UserName = '$usernameVariable'
+                Users.UserName = '$usernameVariable' AND
                 Restaurant.Rname = '$restaurantName'";
                 
 
