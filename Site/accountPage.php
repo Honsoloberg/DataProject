@@ -32,7 +32,8 @@ $account->pullInitial();
         <ul class="navList">
             <li class="navItems"><a href="main.php">Home</a></li>
             <li class="navItems"><a href="accountPage.php">Account</a></li>
-            <li class="navItems"><a href="orderPage.php">Orders</a></li>            
+            <li class="navItems"><a href="orderPage.php">Orders</a></li>
+            <li class="navItems" id="loginBut"><a href="main.php">Logout</a></li>            
         </ul>
     </div>
     <div style="padding-top:20px;">

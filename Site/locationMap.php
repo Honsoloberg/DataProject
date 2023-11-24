@@ -44,6 +44,7 @@ if(!empty($_GET) && !$_SESSION['err']){
         <li class="navItems"><a href="">Home</a></li>
         <li class="navItems"><a href="">Account</a></li>
         <li class="navItems"><a href="">Orders</a></li>
+        <li class="navItems" id="loginBut"><a href="">Logout</a></li>
     </ul>
   </div>
   <div>
