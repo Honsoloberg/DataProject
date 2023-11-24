@@ -183,29 +183,23 @@ if (isset($_GET['query'])) {
 }
 ?>
 
+
+
+
 <?php if (isset($_GET['query'])): ?>
     <form method='get' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
         <input type='hidden' name='style' value='<?php echo $style; ?>'>
         <input type='hidden' name='Clear' value='5'>
         <input type='hidden' name='Quant' value='5'>
-        <button type='button' onclick='addItemFunction("<?php echo $searchTerm ?>","<?php echo $Quant ?>");'>Add Item</button>
+        <button type='button' onclick='<?php $pop->addItemFunction('bob'); ?>'>Add Item</button>
         <button type='submit'>Clear Results</button>
     </form>
 <?php endif; ?>
 
-<script>
-    function addItemFunction(searchTerm,Quant) {
-        INSERT INTO building_my_order (UID, Rname, Iname, Quant, Decript, Price)
-VALUES (
-    '".$_SESSION["uid"]."', 
-    (SELECT Rname FROM Restaurant WHERE ID = (SELECT RID FROM Items WHERE Iname = '".$searchTerm."')),
-    '".$searchTerm."', 
-    '".$Quant."', 
-    (SELECT Decript FROM Items WHERE Iname = '".$searchTerm."'),
-    (SELECT Price FROM Items WHERE Iname = '".$searchTerm."')
-);
 
-</script>
+
+
+
 
 
 <br>

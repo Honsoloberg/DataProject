@@ -295,17 +295,6 @@ public function popFundsTable($localID){
 }
 
 
-    public function addItemFunction($searchTerm) {
-        echo "$searchTerm"; 
-        echo "asdfasdf";
-        $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
-        $sql = "INSERT INTO building_my_order (UID, Rname, Iname, Quant, Decript, Price)
-                VALUES (1, 'Restaurant1', 'Item1', 3, 'Description for Item1', 10.99);";
-        $result = $conn->query($sql);
-        $conn->close();
-        echo $searchTerm;
-
-    }
  public function popBuildingOrderTable() {
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
         $sql = "SELECT * FROM building_my_order"; 
@@ -327,6 +316,52 @@ public function popFundsTable($localID){
             echo '<tr><td colspan="5">No active orders found</td></tr>';
         }
     }
+
+    public function addItemFunction($searchTerm) {
+        // echo '<p>Nathan</p>';
+        // echo '<p>' . $searchTerm . '</p>';
+        $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+        $sql = "SELECT * FROM building_my_order"; 
+        $result = $conn->query($sql);
+        $conn->close();
+
+        // Check if there are results
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo '<tr>';
+                echo '<td>' . $row['RestaurantName'] . '</td>';
+                echo '<td>' . $row['ItemName'] . '</td>';
+                echo '<td>' . $row['Quantity'] . '</td>';
+                echo '<td>' . $row['Descriptions'] . '</td>';
+                echo '<td>' . $row['Price'] . '</td>';
+                echo '</tr>';
+            }
+        } else {
+            echo '<tr><td colspan="5">No active orders found</td></tr>';
+        }
+    }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 }  
  
