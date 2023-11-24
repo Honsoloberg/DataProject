@@ -124,14 +124,15 @@ switch ($_SESSION['style']) {
     <?php else : ?>
         <form method="post" action="">
             <input type="hidden" name="get_top_list" value="1">
-            <button type="submit">Get Top List</button>
+            <button type="submit">High Roller Items</button>
         </form>
     <?php endif; ?>
 </div>
 
 
 <div>
-    <h2 style="text-align:center;">Wish to compare <?php echo $restaurantName; ?> with any other? </h2>
+
+    <h2 style="text-align:left;">Wish to compare <?php echo $restaurantName; ?> with any other? </h2>
 <!--Query 5-->
     <form method="post" action="">
         <input type="radio" name="restaurant" value="Starbucks"> Starbucks
