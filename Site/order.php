@@ -32,11 +32,27 @@ class order extends config{
                 <td>" . $row["Fname"] . " " . $row["Lname"] . "</td>
                 <td>" . $row["Car"] . "</td>
                 <td>" . $row["Plate"] . "</td>
-                <td>" . $row['UserName'] . "</td>
+                <td>" . $button . "</td>
                 ";
                 echo "</tr>";
             }
         }
+        $conn->close();
+    }
+
+    public function cancel($id){
+
+        $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+
+        $sql = "DELETE FROM orders WHERE ID = '" . $id . "'";
+
+        @$conn->query($sql);
+
+        if($conn->error != ""){
+            echo "<p style='text-align:center;color:red;'>Error: For some reason that order couldn't be deleted</p>";
+        }
+
+        $conn->close();
     }
 }
 ?>

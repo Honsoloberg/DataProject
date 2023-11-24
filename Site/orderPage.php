@@ -36,6 +36,11 @@ $order = new order();
     <br>
 
     <h3 style='text-align:center;padding-bottom:20px;'>Orders</h3>
+    <?php
+        if(isset($_POST['order'])){
+            $order->cancel($_POST['order']);
+        }
+    ?>
     <table border=1 style='margin:0 auto;text-align:center;'>
         <tr>
             <th>Order Number</th>
