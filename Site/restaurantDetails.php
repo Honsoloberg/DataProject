@@ -100,9 +100,11 @@ switch ($_SESSION['style']) {
         </ul>
     </div>
 
+
     <div>
     <?php if (isset($_POST['get_all_items'])) : ?>
-        <h2 style="text-align:center;">Query 8</h2>
+        <h2 style="text-align:center;">All Available Items</h2> 
+        <!--Query 8-->
         <?php $pop->popAllItems($restaurantName); ?>
     <?php else : ?>
         <form method="post" action="">
@@ -116,7 +118,8 @@ switch ($_SESSION['style']) {
 
 <div>
     <?php if (isset($_POST['get_top_list'])) : ?>
-        <h2 style="text-align:center;">Query 2</h2>
+        <h2 style="text-align:center;">Feeling Frivolous?</h2>
+        <!--Query 2-->
         <?php $pop->popTopList(); ?>
     <?php else : ?>
         <form method="post" action="">
@@ -128,8 +131,8 @@ switch ($_SESSION['style']) {
 
 
 <div>
-    <h2 style="text-align:center;">Query 5</h2>
-
+    <h2 style="text-align:center;">Wish to compare <?php echo $restaurantName; ?> with any other? </h2>
+<!--Query 5-->
     <form method="post" action="">
         <input type="radio" name="restaurant" value="Starbucks"> Starbucks
         <input type="radio" name="restaurant" value="Wendys"> Wendys
