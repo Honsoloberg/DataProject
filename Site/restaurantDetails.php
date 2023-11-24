@@ -294,7 +294,7 @@ switch ($_SESSION['style']) {
 </table>
 
 <!-- You can add a button or link to trigger the addition of a new row -->
-<button onclick="addNewRow()">Add Item to Oder</button>
+<button onclick="addNewRow()">Add Item to Order</button>
 
 <script>
 function addNewRow() {
