@@ -64,7 +64,7 @@ class Mpopulate extends config{
                 echo "<tr>
                         <td>" . $row["RestaurantName"] . "</td>
                         <td>" . $row["OrderCount"] . "</td>
-                        <td>" . $row["AvgTotalPrice"] . "</td>
+                        <td>" . "$" . number_format($row["AvgTotalPrice"], 2, '.'. '') . "</td>
                     </tr>";
             }
         
