@@ -208,6 +208,7 @@ switch ($_SESSION['style']) {
                 
 
         $result = $conn->query($sql);
+        $conn->close();
 
         // Check if there are results
         if ($result->num_rows > 0) {
@@ -229,38 +230,10 @@ switch ($_SESSION['style']) {
         echo '<tr><td colspan="5">Invalid username</td></tr>';
     }
 
-    // Close the database connection
 
     ?>
 </tbody>
 </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- You can add a button or link to trigger the addition of a new row -->
 <button onclick="addNewRow()">Add Item to Oder</button>
@@ -284,29 +257,6 @@ function addNewRow() {
 </script>
 
 
-<div>
-    <h2>Click on any of the Restaurants below to go back to the home page</h2>
-    <?php
-    $sql = "SELECT Rname FROM restaurant";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        echo "<ul>";
-        while ($row = $result->fetch_assoc()) {
-            $otherRestaurantName = $row["Rname"];
-            if ($otherRestaurantName != $restaurantName) {
-                echo "<li><a href='main.php?restaurantName=" . urlencode($otherRestaurantName) . "'>" . $otherRestaurantName . "</a></li>";
-            }
-        }
-        echo "</ul>";
-    } else {
-        echo "0 results";
-    }
-
-    // Close the database connection
-    $conn->close();
-    ?>
-</div>
 
 </body>
 </html>
