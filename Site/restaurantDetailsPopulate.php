@@ -4,7 +4,7 @@ class rDetailsPop extends config{
 
 
 
-
+// Query 8) Query to retrieve items based on the provided restaurant name
     public function popAllItems($restaurantName){
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
         
@@ -36,6 +36,7 @@ class rDetailsPop extends config{
 
     }
 
+    // Query 9) Query for most expensive item at each restaurant 
     public function popMostExpensive($restaurantName){
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
         $sql = "";

@@ -99,7 +99,7 @@ switch ($_SESSION['style']) {
     </div>
 
 
-<div>
+    <div>
     <form method="get">
         <label for="search">Search By Keyword:</label>
         <input type='hidden' name="style" value= "<?php echo $style ?>">
