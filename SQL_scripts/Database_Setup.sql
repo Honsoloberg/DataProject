@@ -117,17 +117,29 @@ VALUES
 
 INSERT INTO Items (ID, RID, Iname, Price, Decript)
 VALUES
-    (569170, 817024, 'Big Mac', 10, 'Big Burger'),
-    (183030, 817024, 'Jr. Chicken', 5, 'Small Sandwich'),
+    (569170, 817024, 'Big Mac', 10, 'Big Jiucy Burger'),
+    (183030, 817024, 'Jr. Chicken', 5, 'Small Little Sandwich'),
+    (569160, 817024, 'Sausage McMuffin', 3, 'Small Tasty Sausage cheese and bread'),
+    (559170, 817024, 'Sausage McGriddles', 2.5, 'The perfect sausage breakfast sandwich to start the day! '),
     (156056, 266291, 'Baconator', 10, 'Bacon Burger'),
     (269487, 266291, 'Chili', 5, 'Tasty Chili'),
+    (156046, 266291, 'Classic Egg and Cheese Sandwich', 6, 'Classic Breakfast Sandwich'),
+    (155046, 266291, 'Daves Triple', 8, 'Big Meaty Sandwich'),
     (590706, 340492, 'Lg Wrap', 10, 'Big Boi Wrap'),
     (794685, 340492, 'Bowl', 5, 'Big Bowl of salad'),
-    (862625, 426441, 'Coffee', 2, 'Any Size Coffee'),
+    (794585, 340492, 'Chicken On The Rocks', 7, 'Chicken on the -rocks- '),
+    (794675, 340492, 'Big Box- Chicken', 12, 'Whole Chicken Meal'),
+    (862624, 426441, 'Coffee', 2, 'Any Size Coffee'),
     (894913, 426441, 'Donut', 3, 'Perfectly Glazed donut'),
+    (894813, 426441, 'Baileys Cream Coffee ', 4, 'Coffee With Baileys Un-Alcholic'),
+    (894903, 426441, 'Flatbread Pizza', 8, 'Perfectly Cooked Flatbread Pizza'),
     (513738, 733348, 'Chicken Thighs', 10, 'Perfectly cooked S-Tier Chicken'),
     (318574, 733348, 'Potato Wedges', 5, 'Perfectly seasoned Potato wedges'),
-    (589861, 253617, 'Latte', 20, 'Not a big cup of overpriced coffee'),
+    (318474, 733348, '2  Piece Meal', 14, 'Perfectly seasoned Chicken Meal'),
+    (318564, 733348, '9 Piece Feast', 39, 'Perfectly seasoned Chicken For the Family'),
+    (589861, 253617, 'Latte', 20, 'Not a big cup of not-overpriced coffee'),
+    (588861, 253617, 'Everything Croissant', 8, 'Everything Croissant & Roasted Ham Sandwich'),
+    (589761, 253617, 'Original Hummus & Crackers Snack Box', 4, 'With Crackers and Hummus'),
     (150454, 253617, 'Lollipop Donut', 2, 'Bite Size crumbs');
 
 INSERT INTO O_Items (O_ID, Item_ID, Quant, Comments)
