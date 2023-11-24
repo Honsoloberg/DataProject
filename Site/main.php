@@ -9,6 +9,7 @@
     $pop = new MPopulate();
     if(isset($_SESSION['search'])){
         $_SESSION['search'] = NULL;
+        $_SESSION['quant'] = NULL;
     }
     if(isset($_SESSION['style'])){
         $_SESSION['style'] = NULL;

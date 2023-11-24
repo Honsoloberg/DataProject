@@ -322,7 +322,11 @@ public function popFundsTable($localID){
             $items = $result->fetch_assoc();
 
             foreach($items as $var){
-                $quant[$value] = $var;
+                if(isset($quant[$value])){
+                    $quant[$value] += $var;
+                } else {
+                    $quant[$value] = $var;
+                }
             }
 
         }
@@ -337,7 +341,7 @@ public function popFundsTable($localID){
                 if(array_search($row['Iname'], $searchResult) >= 0 && array_search($row['Iname'], $searchResult) != FALSE){
                     $remove = "<form method='post' action=''>
                     <input type='hidden' name='order' value='". $row["Iname"] ."'>
-                    <button type=submit>Cancel</button>
+                    <button type=submit>Remove</button>
                     </form>";
 
                     echo "<tr>";
