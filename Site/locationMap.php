@@ -43,6 +43,7 @@ if(!empty($_GET) && !$_SESSION['err']){
     <ul class="navList">
         <li class="navItems"><a href="">Home</a></li>
         <li class="navItems"><a href="">Account</a></li>
+        <li class="navItems"><a href="">Orders</a></li>
     </ul>
   </div>
   <div>

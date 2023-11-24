@@ -36,7 +36,7 @@ $account->pullInitial();
         </ul>
     </div>
     <div style="padding-top:20px;">
-        <h3 style="padding-bottom:10px;">Funds:</h3>
+        <h3 style="padding-bottom:10px;text-align:center;">Funds:</h3>
 
         <?php
             if(isset($_POST['funds'])){
@@ -46,7 +46,7 @@ $account->pullInitial();
             $account->getFunds();
         ?>
 
-        <form method="post" action="">
+        <form style="text-align:center;" method="post" action="">
             <label for="funds">Add Funds: </label>
             <input type="number" name="funds" step="0.01">
             <button type="submit">Add</button>
@@ -55,12 +55,12 @@ $account->pullInitial();
     </div>
     <br>
     <div>
-        <h3 style="padding-bottom:10px;">Address:</h3>
+        <h3 style="padding-bottom:10px;text-align:center;">Address:</h3>
 
         <?php
             $account->getAddress();
         ?>
-        <button type="button" href="locationMap.php">Change Address</button>
+        <button type="button" style="display:block;margin-left:auto;margin-right:auto;margin-top:10px;" href="locationMap.php">Change Address</button>
     </div>
     </body>
 </html>

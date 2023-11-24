@@ -88,6 +88,7 @@ switch ($_SESSION['style']) {
         <ul class="navList">
             <li class="navItems"><a href="main.php">Home</a></li>
             <li class="navItems"><a href="accountPage.php">Account</a></li>
+            <li class="navItems"><a href="orderPage.php">Orders</a></li>
         </ul>
     </div>
 

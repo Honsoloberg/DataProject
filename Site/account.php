@@ -24,7 +24,7 @@ class accountInfo extends config{
 
     public function getFunds(){
 
-        echo "<p style='padding-bottom:10px;'>Current Funds: $" . $this->funds . "</p>";
+        echo "<p style='padding-bottom:10px;text-align:center;'>Current Funds: $" . $this->funds . "</p>";
     }
 
     public function addFunds(){
@@ -45,7 +45,7 @@ class accountInfo extends config{
     }
 
     public function getAddress(){
-        echo "<p>Current Delivery Address: " . $this->address . "</p>";
+        echo "<p style='text-align:center;'>Current Delivery Address: " . $this->address . "</p>";
     }
 }
 ?>
