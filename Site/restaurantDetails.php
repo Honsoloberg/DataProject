@@ -109,7 +109,7 @@ switch ($_SESSION['style']) {
     <?php else : ?>
         <form method="post" action="">
             <input type="hidden" name="get_all_items" value="1">
-            <button type="submit">Get All</button>
+            <button type="submit">View all Choices</button>
         </form>
     <?php endif; ?>
 </div>
@@ -124,14 +124,15 @@ switch ($_SESSION['style']) {
     <?php else : ?>
         <form method="post" action="">
             <input type="hidden" name="get_top_list" value="1">
-            <button type="submit">Get Top List</button>
+            <button type="submit">High Roller Items</button>
         </form>
     <?php endif; ?>
 </div>
 
 
 <div>
-    <h2 style="text-align:center;">Wish to compare <?php echo $restaurantName; ?> with any other? </h2>
+
+    <h2 style="text-align:left;">Wish to compare <?php echo $restaurantName; ?> with any other? </h2>
 <!--Query 5-->
     <form method="post" action="">
         <input type="radio" name="restaurant" value="Starbucks"> Starbucks
@@ -154,8 +155,10 @@ switch ($_SESSION['style']) {
 
 
 <div>
+    <!--Query 7-->
+    <br>
     <?php if (isset($_POST['get_rest_address'])) : ?>
-        <h2 style="text-align:center;">Query 7</h2>
+        <h2 style="text-align:center;"></h2>
         <?php $pop->popRestAddress($restaurantName); ?>
     <?php else : ?>
         <form method="post" action="">
@@ -168,8 +171,9 @@ switch ($_SESSION['style']) {
 
     
 <div>
+    <!--Query 9-->
     <?php if (isset($_POST['get_most_expensive'])) : ?>
-        <h2 style="text-align:center;">Query 9</h2>
+        <h2 style="text-align:center;">Most Expensive Item</h2>
         <?php $pop->popMostExpensive($restaurantName); ?>
     <?php else : ?>
         <form method="post" action="">
@@ -181,8 +185,9 @@ switch ($_SESSION['style']) {
 
 
 <div>
+    <!--Query 10-->
     <?php if (isset($_POST['get_least_expensive'])) : ?>
-        <h2 style="text-align:center;">Query 10</h2>
+        <h2 style="text-align:center;">Least Expensive Item</h2>
         <?php $pop->popLeastExpensive($restaurantName); ?>
     <?php else : ?>
         <form method="post" action="">

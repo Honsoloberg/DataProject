@@ -120,7 +120,6 @@ public function popOrderList($usernameVariable){
 
     echo "<table border='1'style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
     <tr>
-        <th>Item ID</th>
         <th>Item Name</th>
         <th>Price</th>
         <th>Restaurant Name</th>
@@ -129,7 +128,6 @@ public function popOrderList($usernameVariable){
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo "<tr>
-                    <td>" . $row["ID"] . "</td>
                     <td>" . $row["Iname"] . "</td>
                     <td>" . $row["Price"] . "</td>
                     <td>" . $row["Rname"] . "</td>
