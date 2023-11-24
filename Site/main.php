@@ -53,14 +53,5 @@
 
     </div>
     
-    <div>
-        <h2 style="text-align:center;">Deilvery Information</h2>
-        <?php
-            $pop->popWhosDriverMyOrder();
-        ?>
-
-    </div>
-
-    
 </body>
 </html>
