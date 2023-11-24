@@ -20,6 +20,10 @@
     width: 100%;
 }
 
+.navItems{
+    float: left;
+}
+
 .navItems a {
     display: block;
     color: white;
