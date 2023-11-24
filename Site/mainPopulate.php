@@ -64,7 +64,7 @@ class Mpopulate extends config{
                 echo "<tr>
                         <td>" . $row["RestaurantName"] . "</td>
                         <td>" . $row["OrderCount"] . "</td>
-                        <td>" . $row["AvgTotalPrice"] . "</td>
+                        <td>" . "$" . number_format($row["AvgTotalPrice"], 2, '.'. '') . "</td>
                     </tr>";
             }
         
@@ -75,62 +75,5 @@ class Mpopulate extends config{
         
             
     }
-
-    public function popWhosDriverMyOrder(){
-    $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
-  
-    $sql = "SELECT Driver.ID, Driver.Fname, Driver.Lname, Driver.CarModel, Driver.Plate, Driver.Insurance,
-           Orders.ID AS OrderID, Orders.TotalPrice, Restaurant.Rname AS RestaurantName, Users.Fname AS UserName
-        FROM Driver
-        LEFT JOIN Orders ON Driver.ID = Orders.DID
-        LEFT JOIN Restaurant ON Orders.RID = Restaurant.ID
-        LEFT JOIN Users ON Orders.UID = Users.ID
-        UNION
-        SELECT Driver.ID, Driver.Fname, Driver.Lname, Driver.CarModel, Driver.Plate, Driver.Insurance,
-            Orders.ID AS OrderID, Orders.TotalPrice, Restaurant.Rname AS RestaurantName, Users.Fname AS UserName
-        FROM Driver
-        RIGHT JOIN Orders ON Driver.ID = Orders.DID
-        LEFT JOIN Restaurant ON Orders.RID = Restaurant.ID
-        LEFT JOIN Users ON Orders.UID = Users.ID;";
-
-
-    $result = $conn->query($sql);
-    $conn->close();
-
-    echo "
-    <table border='1' style='margin-left:auto;margin-right:auto;text-align: center'>
-    <tr>
-        <th>Driver ID</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Car Model</th>
-        <th>Plate</th>
-        <th>Insurance</th>
-        <th>Order ID</th>
-        <th>Total Price</th>
-        <th>Restaurant Name</th>
-        <th>User Name</th>
-    </tr>";
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>
-                    <td>" . $row["ID"] . "</td>
-                    <td>" . $row["Fname"] . "</td>
-                    <td>" . $row["Lname"] . "</td>
-                    <td>" . $row["CarModel"] . "</td>
-                    <td>" . $row["Plate"] . "</td>
-                    <td>" . $row["Insurance"] . "</td>
-                    <td>" . $row["OrderID"] . "</td>
-                    <td>" . $row["TotalPrice"] . "</td>
-                    <td>" . $row["RestaurantName"] . "</td>
-                    <td>" . $row["UserName"] . "</td>
-                  </tr>";
-        }
-    } else {
-        echo "<tr><td colspan='10'>0 results</td></tr>";
-    }
-    
-   echo "</table>";
-
 }
-}?>
+?>
