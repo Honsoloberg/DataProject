@@ -2,6 +2,62 @@
 include "config.php";
 class rDetailsPop extends config{
 
+// Query 1) Computes a join of at least 3 tables:
+public function popOrderList($usernameVariable){
+    $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+    $sql = "SELECT
+    O_Items.O_ID AS Order_Number,
+    O_Items.Quant AS Quantity,
+    Items.Iname AS ItemName,
+    Items.Decript AS Descriptions,
+    Items.Price,
+    Restaurant.Rname AS RestaurantName
+
+    FROM
+        O_Items
+    JOIN
+        Items ON O_Items.Item_ID = Items.ID
+    JOIN
+        Orders ON O_Items.O_ID = Orders.ID
+    JOIN
+        Restaurant ON Orders.RID = Restaurant.ID
+    JOIN
+        Users ON Orders.UID = Users.ID
+    WHERE
+        Users.UserName = '$usernameVariable'";
+
+    $result = $conn->query($sql);
+    $conn->close();
+    
+    echo "<h2 style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%;'></h2>";
+    echo "<table border='1'style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
+    <thead>
+        <tr>
+
+            <th>Order Number</th>
+            <th>Restaurant</th>
+            <th>Item Name</th>
+            <th>Quantity</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody id='orderTableBody'style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>";
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo '<tr>';
+            echo '<td>' . $row['Order_Number'] . '</td>';
+            echo '<td>' . $row['RestaurantName'] . '</td>';
+            echo '<td>' . $row['ItemName'] . '</td>';
+            echo '<td>' . $row['Quantity'] . '</td>';
+            echo '<td>' . $row['Descriptions'] . '</td>';
+            echo '<td>' . $row['Price'] . '</td>';
+            echo '</tr>';
+        }
+    } else {
+        echo '<tr><td colspan="5">No active orders found</td></tr>';
+    }
+    }
 
 
 
@@ -83,6 +139,39 @@ class rDetailsPop extends config{
  
     echo "</table>";
     }
+
+// Query 6) Query for user funds 
+public function popFundsTable($localID){
+    $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+    $sql = "SELECT Funds, Fname, Lname, UserName
+        FROM Users
+        WHERE UserName = '$localID'";
+    $result = $conn->query($sql);
+    $conn->close();
+    echo "<table border='1'>
+        <tr>
+        <th>Funds</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>User Name/th>
+    </tr>";
+    
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>" . $row["Funds"] . "</td>
+                    <td>" . $row["Fname"] . "</td>
+                    <td>" . $row["Lname"] . "</td>
+                    <td>" . $row["UserName"] . "</td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='3'>0 results</td></tr>";
+    }
+    echo "</table>";
+    }
+
+
 
  // Query 7) Query for restaurants address 
  public function popRestAddress($restaurantName){
@@ -197,7 +286,6 @@ class rDetailsPop extends config{
                         <th>Item Name</th>
                         <th>Max Price</th>
                     </tr>";
-        
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>
                         <td>" . $row["Rname"] . "</td>
@@ -205,21 +293,10 @@ class rDetailsPop extends config{
                         <td>" . $row["MaxPrice"] . "</td>
                       </tr>";
             }
-        
             echo "</table>";
         } else {
             echo "0 results";
         }
-        
-
-    }
-
-
-
-
-
-
-
-    
+    }  
 }
 ?>

@@ -138,17 +138,7 @@ switch ($_SESSION['style']) {
             $pop->popLeastExpensive($restaurantName);
         ?>        
     </div>
-
-    <div>
-        <h2 style="text-align:center;">Query 10</h2>
-        <?php
-       
-            $pop->popLeastExpensive($restaurantName);
-        ?>        
-    </div>
-
-
-
+    
     <div>
     <br>
     <form method="get" style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
@@ -160,7 +150,6 @@ switch ($_SESSION['style']) {
     </form>
 
     <?php
-
     if (isset($_GET['query'])) {
     $searchTerm = $_GET['query'];
     $searchTerm = $conn->real_escape_string($searchTerm);
@@ -192,13 +181,10 @@ switch ($_SESSION['style']) {
             $_SESSION['search'] = $searchResults;
         }
     }
-
 }
 ?>
 
-
-
-<table border='1'>
+<table border='1' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
     <tr><th>Item</th><th>Price</th></tr>
     <?php foreach ($searchResults as $result) { ?>
         <tr>
@@ -207,15 +193,20 @@ switch ($_SESSION['style']) {
         </tr>
     <?php } ?>
 </table>
-           <form method='get'>
+           <form method='get' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
             <input type='hidden' name='style' value= '<?php echo $style ?>'>
             <button type='submit'>Clear Results</button>
             </form>
 
 </div>
 
-
-<h2>Active Orders</h2>
+    <div>
+        <h2 style="text-align:center;">Query 1</h2>
+        <?php
+       
+            $pop->popOrderList($restaurantName);
+        ?>        
+    </div>
 
 <table border="1">
     <thead>
@@ -255,7 +246,9 @@ switch ($_SESSION['style']) {
             JOIN
                 Users ON Orders.UID = Users.ID
             WHERE
-                Users.UserName = '$usernameVariable'";
+                Users.UserName = '$usernameVariable'
+                Restaurant.Rname = '$restaurantName'";
+                
 
         $result = $conn->query($sql);
 
