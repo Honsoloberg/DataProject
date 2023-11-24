@@ -332,6 +332,17 @@ public function popFundsTable($localID){
                 $_SESSION['search'] = $searchResults;
             }
         }
+////////////////////////////////////////////////////////////////////////////////////////////
+        // $seen["$searchResult['name']"] = 1
+        // $seen["$searchResult['name']"] += 1
+        
+        // $seen[] = NULL;
+        // if(isset($seen["$_GET['']"])){
+        //     $seen["$searchResult['name']"] += 1
+        // }else{
+        //     $seen["$searchResult['name']"] = 1
+        // }
+////////////////////////////////////////////////////////////////////////////////////////////
     
         echo "<table border='1' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>";
         echo "<tr><th>Item</th><th>Price</th></tr>";
