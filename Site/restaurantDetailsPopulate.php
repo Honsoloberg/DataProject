@@ -275,7 +275,7 @@ public function popFundsTable($localID){
         // Initialize $searchResults as an empty array
         $searchResult = array("First");
 
-        if(isset($_GET['Clear'])){
+        if($_GET['Clear'] == 5){
             $_SESSION['search'] = NULL;
         }
         if(isset($_SESSION['search'])){
@@ -286,6 +286,7 @@ public function popFundsTable($localID){
             array_push($searchResult, $row['Iname']);
             $_SESSION['search'] = $searchResult;
         }
+
 
 
         if ($result->num_rows > 0) {
@@ -314,19 +315,20 @@ public function popFundsTable($localID){
             $quant = $_SESSION['quant'];
         }
         foreach ($searchResult as $value){
-            $sql = "SELECT count(Iname)
+            $sql = "SELECT Quant
                     FROM building_my_order
                     WHERE UID = '" . $_SESSION['uid'] ."' AND Iname = '" . $value . "'";
 
             $result = $conn->query($sql);
-            $items = $result->fetch_assoc();
+            if($result->num_rows > 0){
+                $items = $result->fetch_assoc();
+            }
 
+            if($value == "First"){
+                continue;
+            }
             foreach($items as $var){
-                if(isset($quant[$value])){
-                    $quant[$value] += $var;
-                } else {
-                    $quant[$value] = $var;
-                }
+                $quant[$value] = $var;
             }
 
         }
@@ -336,9 +338,8 @@ public function popFundsTable($localID){
 
         $result = $conn->query($sql);
 
-        for($i = 0; $i<count($searchResult); $i++){
             while($row = $result->fetch_assoc()){
-                if(array_search($row['Iname'], $searchResult) >= 0 && array_search($row['Iname'], $searchResult) != FALSE){
+                if(array_search($row['Iname'], $searchResult) >= 1 && array_search($row['Iname'], $searchResult) != FALSE){
                     $remove = "<form method='post' action=''>
                     <input type='hidden' name='order' value='". $row["Iname"] ."'>
                     <button type=submit>Remove</button>
@@ -354,7 +355,6 @@ public function popFundsTable($localID){
                     echo "</tr>";
                 }
             }
-        }
         $conn->close();
     }
 }
