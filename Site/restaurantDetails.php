@@ -68,8 +68,8 @@ switch ($_SESSION['style']) {
 
         /* Style the image */
         #restaurant-image {
-            width: 50%;
-            max-width: 600px; /* Adjust the maximum width as needed */
+            width: 100%;
+            max-width: 300px; /* Adjust the maximum width as needed */
             height: auto;
         }
     </style>
