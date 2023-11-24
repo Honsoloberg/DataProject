@@ -13,7 +13,7 @@ class Mpopulate extends config{
             echo "<form method='get' action='restaurantDetails.php'>";
 
             while ($row = $result->fetch_assoc()) {
-                $imageName = $row["Rname"] . ".jpg";
+                $imageName = $row["Rname"] . ".png";
                 echo "<button class='rButton' name='Rname' type='submit' value='". $row['Rname'] . "'>";
                 echo "<img src='$imageName' alt='Restaurant Image' width='250' height='200' style='margin-right: 10px;'>";
                 echo "<strong>" . $row["Rname"] . "</strong>";
