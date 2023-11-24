@@ -241,85 +241,93 @@ public function popFundsTable($localID){
         $result = $conn->query($sql);
         $conn->close();
         if ($result->num_rows > 0) {
-            // Output data in a table
-            echo "<table border='1'style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
-                    <tr>
-                        <th>Restaurant Name</th>
-                        <th>Item Name</th>
-                        <th>Max Price</th>
-                    </tr>";
+            echo '<table border="1" style="margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;">';
+            echo '<thead><tr><th>Item Name</th><th>Price</th></tr></thead>';
+            echo '<tbody>';
+        
+            // Output data of each row
             while ($row = $result->fetch_assoc()) {
-                echo "<tr>
-                        <td>" . $row["Rname"] . "</td>
-                        <td>" . $row["ItemName"] . "</td>
-                        <td>" . $row["MaxPrice"] . "</td>
-                      </tr>";
+                echo '<tr>';
+                echo '<td>' . $row['Iname'] . '</td>';
+                echo '<td>' . $row['Price'] . '</td>';
+                echo '</tr>';
             }
-            echo "</table>";
+        
+            echo '</tbody>';
+            echo '</table>';
         } else {
-            echo "0 results";
+            echo 'No results found.';
         }
+        
     }
     
     public function popSearch($searchTerm, $restaurantName) {
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
-        $sql = "SELECT Items.*
+        $sql = "SELECT Items.Iname, Items.Price
             FROM Items
             INNER JOIN Restaurant ON Items.RID = Restaurant.ID
-            WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '$searchTerm'";
-        
+            WHERE Restaurant.Rname = '$restaurantName' AND Items.Iname LIKE '%$searchTerm%'";
+
+    $result = $conn->query($sql);
+
+    // Check if there are results
+    if ($result->num_rows > 0) {
+        echo '<table border="1">';
+        echo '<thead><tr><th>Item Name</th><th>Price</th></tr></thead>';
+        echo '<tbody>';
+
+        // Output data of each row
+        while ($row = $result->fetch_assoc()) {
+            echo '<tr>';
+            echo '<td>' . $row['Iname'] . '</td>';
+            echo '<td>' . $row['Price'] . '</td>';
+            echo '</tr>';
+        }
+
+        echo '</tbody>';
+        echo '</table>';
+    } else {
+        echo 'No results found.';
+    }
+
+    // Close the connection
+    $conn->close();
+}
+
+
+    public function addItemFunction($searchTerm) {
+        echo "$searchTerm"; 
+        echo "asdfasdf";
+        $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+        $sql = "INSERT INTO building_my_order (UID, Rname, Iname, Quant, Decript, Price)
+                VALUES (1, 'Restaurant1', 'Item1', 3, 'Description for Item1', 10.99);";
         $result = $conn->query($sql);
         $conn->close();
-    
-        // Initialize $searchResults as an empty array
-        $searchResults = [];
-    
-        if ($result->num_rows > 0) {
-            // Add each result to the searchResults array
-            if (!empty($_GET["Clear"])) {
-                unset($_SESSION['search']);
-            }
-    
-            if (isset($_SESSION['search'])) {
-                $searchResults = $_SESSION['search'];
-            }
-    
-            if ($_GET['query'] != "") {
-                while ($row = $result->fetch_assoc()) {
-                    $searchResults[] = [
-                        'name' => $row["Iname"],
-                        'price' => $row["Price"]
-                    ];
-                }
-                $_SESSION['search'] = $searchResults;
-            }
-        }
-////////////////////////////////////////////////////////////////////////////////////////////
-        // $seen["$searchResult['name']"] = 1
-        // $seen["$searchResult['name']"] += 1
-        
-        // $seen[] = NULL;
-        // if(isset($seen["$_GET['']"])){
-        //     $seen["$searchResult['name']"] += 1
-        // }else{
-        //     $seen["$searchResult['name']"] = 1
-        // }
-////////////////////////////////////////////////////////////////////////////////////////////
-    
-        echo "<table border='1' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>";
-        echo "<tr><th>Item</th><th>Price</th></tr>";
-    
-        foreach ($searchResults as $result) {
-            echo "<tr>
-                <td>" . $result['name'] . "</td>
-                <td>" . $result['price'] . "</td>
-            </tr>";
-        }
-    
-        echo "</table>";
+        echo $searchTerm;
+
     }
+ public function popBuildingOrderTable() {
+        $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+        $sql = "SELECT * FROM building_my_order"; 
+        $result = $conn->query($sql);
+        $conn->close();
+
+        // Check if there are results
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo '<tr>';
+                echo '<td>' . $row['RestaurantName'] . '</td>';
+                echo '<td>' . $row['ItemName'] . '</td>';
+                echo '<td>' . $row['Quantity'] . '</td>';
+                echo '<td>' . $row['Descriptions'] . '</td>';
+                echo '<td>' . $row['Price'] . '</td>';
+                echo '</tr>';
+            }
+        } else {
+            echo '<tr><td colspan="5">No active orders found</td></tr>';
+        }
+    }
+    
 }  
-   
-
-
+ 
   ?>

@@ -116,7 +116,7 @@ switch ($_SESSION['style']) {
 
 <div>
 
-    <h2 style="text-align:left;">Wish to compare <?php echo $restaurantName; ?> with any other? </h2>
+    <h3 style="text-align:left;">Wish to compare <?php echo $restaurantName; ?> with any other? </h3>
 <!--Query 5-->
     <form method="post" action="">
         <input type="radio" name="restaurant" value="Starbucks"> Starbucks
@@ -171,39 +171,57 @@ switch ($_SESSION['style']) {
     <form method="get" style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
         <label for="search">Search By Keyword:</label>
         <input type='hidden' name="style" value= "<?php echo $style ?>">
-        <input type='hidden' name="Clear" value= "<?php echo $Clear ?>">
         <input type="text" id="search" name="query" placeholder="What are you hungry for?">
         <button type="submit">Search</button> 
     </form>
 
     <?php
-    if (isset($_GET['query'])) {
-    $searchTerm = $_GET['query'];
-    $searchTerm = $conn->real_escape_string($searchTerm);
-    $pop->popSearch($searchTerm,$restaurantName);}
-    ?>
-    </div>
-            <div>
-           <form method='get' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
-            <input type='hidden' name='style' value= '<?php echo $style ?>'>
-            <input type='hidden' name='Clear' value='5'>
-            <button type='submit'>Clear Results</button>
-            </form>
-            </div>
+if (isset($_GET['query'])) {
+    $searchTerm = $conn->real_escape_string($_GET['query']);
+    $pop->popSearch($searchTerm, $restaurantName);
+    
+}
+?>
 
-<table border="1">
-    <thead>
-        <tr>
+<?php if (isset($_GET['query'])): ?>
+    <form method='get' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
+        <input type='hidden' name='style' value='<?php echo $style; ?>'>
+        <input type='hidden' name='Clear' value='5'>
+        <input type='hidden' name='Quant' value='5'>
+        <button type='button' onclick='addItemFunction("<?php echo $searchTerm ?>","<?php echo $Quant ?>");'>Add Item</button>
+        <button type='submit'>Clear Results</button>
+    </form>
+<?php endif; ?>
 
-            <th>Order Number</th>
-            <th>Restaurant</th>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Description</th>
-            <th>Price</th>
-        </tr>
-    </thead>
-    <tbody id="orderTableBody">
+<script>
+    function addItemFunction(searchTerm,Quant) {
+        INSERT INTO building_my_order (UID, Rname, Iname, Quant, Decript, Price)
+VALUES (
+    '".$_SESSION["uid"]."', 
+    (SELECT Rname FROM Restaurant WHERE ID = (SELECT RID FROM Items WHERE Iname = '".$searchTerm."')),
+    '".$searchTerm."', 
+    '".$Quant."', 
+    (SELECT Decript FROM Items WHERE Iname = '".$searchTerm."'),
+    (SELECT Price FROM Items WHERE Iname = '".$searchTerm."')
+);
+
+</script>
+
+
+<br>
+<div style="text-align: center;">
+    <table border="1" style="margin: 0 auto;">
+        <h3>Building Your Order</h3>
+        <thead>
+            <tr>
+                <th>Restaurant</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Description</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody id="orderTableBody">
     <?php
     // Check if $_SESSION["uname"] is set and not empty before using it
     if (isset($_SESSION["uname"]) && !empty($_SESSION["uname"])) {
@@ -240,7 +258,6 @@ switch ($_SESSION['style']) {
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo '<tr>';
-                echo '<td>' . $row['Order_Number'] . '</td>';
                 echo '<td>' . $row['RestaurantName'] . '</td>';
                 echo '<td>' . $row['ItemName'] . '</td>';
                 echo '<td>' . $row['Quantity'] . '</td>';
@@ -258,31 +275,11 @@ switch ($_SESSION['style']) {
 
 
     ?>
-</tbody>
-</table>
+    </tbody>
+    </table>
+    </div>
 
-<!-- You can add a button or link to trigger the addition of a new row -->
-<button onclick="addNewRow()">Add Item to Order</button>
-
-<script>
-function addNewRow() {
-    // You can add logic here to fetch data or get input from the user
-    var newRowData = [' ', ' ', '', 0,'',0];
-
-    var tableBody = document.getElementById('orderTableBody');
-    var newRow = document.createElement('tr');
-
-    newRowData.forEach(function(value) {
-        var cell = document.createElement('td');
-        cell.textContent = value;
-        newRow.appendChild(cell);
-    });
-
-    tableBody.appendChild(newRow);
-}
-</script>
-
-<div>
+    <div>
     <!--Query 7-->
     <br>
     <?php if (isset($_POST['get_rest_address'])) : ?>
@@ -290,6 +287,7 @@ function addNewRow() {
         <?php $pop->popRestAddress($restaurantName); ?>
     <?php else : ?>
         <form method="post" action="">
+            <input type='hidden' name="Clear" value= "<?php echo $Clear ?>">
             <button type="submit" name="get_rest_address">Get Restaurant Address</button>
         </form>
     <?php endif; ?>

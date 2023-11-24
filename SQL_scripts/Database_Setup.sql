@@ -77,6 +77,18 @@ FOREIGN KEY (O_ID) REFERENCES Orders(ID) ON DELETE CASCADE,
 FOREIGN KEY (Item_ID) REFERENCES Items(ID)
 );
 
+CREATE TABLE building_my_order (
+    UID INT(6),
+    Rname VARCHAR(50),
+    Iname VARCHAR(50),
+    Quant INT(2),
+    Decript VARCHAR(1000),
+    Price DOUBLE(4,2),
+    PRIMARY KEY (UID, Rname, Iname),
+    CONSTRAINT uc_building_my_order UNIQUE (UID, Rname, Iname)
+);
+
+
 INSERT INTO users (ID, Fname, Lname, UserName, Upass, Funds, Address, Birthday, Email)
 VALUES
     (147018, 'Eren', 'Yeager', 'TheTitan', 'pass', 50, 'Oshawa', '01/01/2001', 'Erenyeager@gmail.com'),
