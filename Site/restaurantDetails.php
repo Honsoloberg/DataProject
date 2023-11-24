@@ -100,18 +100,31 @@ switch ($_SESSION['style']) {
     </div>
 
     <div>
+    <?php if (isset($_POST['get_all_items'])) : ?>
         <h2 style="text-align:center;">Query 8</h2>
-        <?php
-            $pop->popAllItems($restaurantName);
-        ?>        
-    </div>
+        <?php $pop->popAllItems($restaurantName); ?>
+    <?php else : ?>
+        <form method="post" action="">
+            <input type="hidden" name="get_all_items" value="1">
+            <button type="submit">Get All</button>
+        </form>
+    <?php endif; ?>
+</div>
 
-    <div>
+
+
+<div>
+    <?php if (isset($_POST['get_top_list'])) : ?>
         <h2 style="text-align:center;">Query 2</h2>
-        <?php
-            $pop->popTopList();
-        ?>        
-    </div>
+        <?php $pop->popTopList(); ?>
+    <?php else : ?>
+        <form method="post" action="">
+            <input type="hidden" name="get_top_list" value="1">
+            <button type="submit">Get Top List</button>
+        </form>
+    <?php endif; ?>
+</div>
+
 
     <div>
         <h2 style="text-align:center;">Query 5</h2>
