@@ -84,6 +84,13 @@ switch ($_SESSION['style']) {
         echo "<img src='$imageName' alt='$restaurantName' id='restaurant-image'>";
     ?>
     </div>
+    <?php
+            if (!empty($_SESSION["uname"])) {
+                echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, " . $_SESSION["uname"] . "</h3>";
+            } else {
+                echo "<h3 style='text-align:center;'> Welcome, User</h3>";
+            }
+        ?>
     <div class="navBar">
         <ul class="navList">
             <li class="navItems"><a href="main.php">Home</a></li>
