@@ -183,7 +183,7 @@ switch ($_SESSION['style']) {
     <div>
     <br>
     <!--Used to add items to the current item listing-->
-    <form method="get" style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
+    <form method="post" style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
         <label for="search">Search By Keyword:</label>
         <input type='hidden' name="style" value= "<?php echo $style ?>">
         <input type='hidden' name="Clear" value= "<?php echo $Clear ?>">
@@ -193,7 +193,7 @@ switch ($_SESSION['style']) {
     </div>
     <div> 
         <!--Clear all items in the listing-->
-        <form method='get' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
+        <form method='post' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
         <input type='hidden' name='style' value= '<?php echo $style ?>'>
         <input type='hidden' name='Clear' value='5'>
         <button type='submit'>Clear Results</button>
@@ -212,10 +212,12 @@ switch ($_SESSION['style']) {
             <tbody>
             <?php
                 //When the Search button is pressed the selected item is displayed to the screen
-                if (isset($_GET['query']) && $_GET['query'] != "") {
-                    $searchTerm = $_GET['query'];
-                    $searchTerm = $conn->real_escape_string($searchTerm);
-                    $pop->popSearch($searchTerm,$restaurantName);
+                if (isset($_POST['query'])) {
+                    if($_POST['query'] != ""){
+                        $searchTerm = $_POST['query'];
+                        $searchTerm = $conn->real_escape_string($searchTerm);
+                        $pop->popSearch($searchTerm,$restaurantName);
+                    }
                 }
             ?>
             </tbody>

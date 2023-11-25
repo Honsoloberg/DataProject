@@ -225,7 +225,7 @@ public function popFundsTable($localID){
         $searchResult = array("First");
 
         //Flag used to clear the item listing
-        if($_GET['Clear'] == 5){
+        if($_POST['Clear'] == 5){
             $_SESSION['search'] = NULL;
         }
         //save values to session
@@ -392,7 +392,7 @@ public function popFundsTable($localID){
 
         $_SESSION['search'] = NULL;
         $_SESSION['quant'] = NULL;    
-        hearder("Location: restaurantDetails.php");           
+        header("Location: restaurantDetails.php");           
     }
 
     private function createOrderID(){
