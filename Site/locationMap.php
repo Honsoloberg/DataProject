@@ -1,9 +1,11 @@
 <?php
+//Creates session to utilize sesion variables
 session_start();
 if(isset($_GET['locality']) && $_GET['locality'] != "Oshawa"){
   $_SESSION["err"] = TRUE;
 }
 
+//Generates a cookie to store Users provided Address
 if(!empty($_GET) && !$_SESSION['err']){
     $name = "ferryLocation";
     $value = "address=". $_GET['ship-address'] . "&" . "city=" . $_GET['locality'] . "&" . "state=" . $_GET['state'] . "&" . "postcode=" . $_GET['postcode'];
@@ -32,6 +34,7 @@ if(!empty($_GET) && !$_SESSION['err']){
     <div>
       <img src="Food_Ferry.png"  alt="Food Ferry" width="175" height="210" style="display:block;margin-left:auto;margin-right:auto;">
       <?php
+          //Generates a customised message for User
           if(!empty($_SESSION["uname"])){
             echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, ". $_SESSION["uname"]."</h3>";
           }else {
@@ -49,13 +52,15 @@ if(!empty($_GET) && !$_SESSION['err']){
   </div>
   <div>
     <?php
+      //Error messgae is displayed when the address provided is not in oshawa
       if($_SESSION["err"]){
         echo "<p style='color:red;text-align:center;'>Please Enter an Oshawa Address</p>";
         $_SESSION["err"] = FALSE;
       }
     ?>
   </div>
-
+      <!--Below form is privided from google maps api and uses their api to generate and validate addresses-->
+      <!--address.js provides primary functionality for form-->
     <form id="address-form" action="" method="get" autocomplete="off" style="display:block;margin-left:auto;margin-right:auto;">
       <p class="title">Address form</p>
       <p class="note"><em>* = required field</em></p>

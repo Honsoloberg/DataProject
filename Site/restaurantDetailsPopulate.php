@@ -2,72 +2,11 @@
 include "config.php";
 class rDetailsPop extends config{
 
-// Query 1) Computes a join of at least 3 tables:
-public function popOrderList($usernameVariable){
-    $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
-    $sql = "SELECT
-    O_Items.O_ID AS Order_Number,
-    O_Items.Quant AS Quantity,
-    Items.Iname AS ItemName,
-    Items.Decript AS Descriptions,
-    Items.Price,
-    Restaurant.Rname AS RestaurantName
-
-    FROM
-        O_Items
-    JOIN
-        Items ON O_Items.Item_ID = Items.ID
-    JOIN
-        Orders ON O_Items.O_ID = Orders.ID
-    JOIN
-        Restaurant ON Orders.RID = Restaurant.ID
-    JOIN
-        Users ON Orders.UID = Users.ID
-    WHERE
-        Users.UserName = '$usernameVariable'";
-
-    $result = $conn->query($sql);
-    $conn->close();
-    
-    echo "<h2 style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%;'></h2>";
-    echo "<table border='1'style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
-    <thead>
-        <tr>
-
-            <th>Order Number</th>
-            <th>Restaurant</th>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Description</th>
-            <th>Price</th>
-        </tr>
-    </thead>
-    <tbody id='orderTableBody'style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>";
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo '<tr>';
-            echo '<td>' . $row['Order_Number'] . '</td>';
-            echo '<td>' . $row['RestaurantName'] . '</td>';
-            echo '<td>' . $row['ItemName'] . '</td>';
-            echo '<td>' . $row['Quantity'] . '</td>';
-            echo '<td>' . $row['Descriptions'] . '</td>';
-            echo '<td>' . $row['Price'] . '</td>';
-            echo '</tr>';
-        }
-    } else {
-        echo '<tr><td colspan="5">No active orders found</td></tr>';
-    }
-    }
-
-
-
- 
-
  // Query 5) Uses nested queries with any of the set operations UNION, to combine items form different restuarants to compare items from to restaurants
  public function popCompareList($restaurantName1,$restaurantName2){
     $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
     
-    
+    //Queries all items from the current and selected restaurant 
     $sql = "SELECT Items.ID, Items.Iname, Items.Price, Restaurant.Rname
         FROM Items
         LEFT JOIN Restaurant ON Items.RID = Restaurant.ID
@@ -80,6 +19,7 @@ public function popOrderList($usernameVariable){
     $result = $conn->query($sql);
     $conn->close();
 
+    //Generates a comparative table for Queried items
     echo "<table border='1'style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
     <tr>
         <th>Item Name</th>
@@ -138,6 +78,7 @@ public function popFundsTable($localID){
  // Query 7) Query for restaurants address 
  public function popRestAddress($restaurantName){
     $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+    //Queries Address for current restaurant view
     $sql = "SELECT R.Rname, R.Address
         FROM Restaurant R
         WHERE R.Rname = '$restaurantName'";
@@ -152,6 +93,7 @@ public function popFundsTable($localID){
                     <th>Address</th>
                 </tr>";
     
+        //output address into a table
         while ($row = $result->fetch_assoc()) {
             echo "<tr>
                     <td>" . $row["Rname"] . "</td>
@@ -170,6 +112,7 @@ public function popFundsTable($localID){
     public function popAllItems($restaurantName){
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
         
+        //Queries all items from current restaurant view
         $sql = "SELECT Items.*
         FROM Items
         INNER JOIN Restaurant ON Items.RID = Restaurant.ID
@@ -177,7 +120,7 @@ public function popFundsTable($localID){
         $result = $conn->query($sql);
         $conn->close();
         if ($result->num_rows > 0) {
-            // Output data of each row
+            // Output data of each row into a display table
             echo "<table style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>";
             echo "<tr><th style='border: 1px solid black;'>Item</th><th style='border: 1px solid black;'>Price</th><th style='border: 1px solid black;'>Description</th</tr>";
         
@@ -198,6 +141,8 @@ public function popFundsTable($localID){
     // Query 9) Query for least expensive item at each restaurant 
     public function popLeastExpensive($restaurantName){
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+        //Query the least expensive items from a reataurant
+
         $sql = "SELECT R.Rname, I.Iname AS ItemName, I.Price AS MinPrice
         FROM Restaurant R
         JOIN Items I ON R.ID = I.RID
@@ -233,6 +178,8 @@ public function popFundsTable($localID){
     //Query 10) Query for the least expensive item at current restaurant
     public function popMostExpensive($restaurantName){
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+
+        //Query the most expensive item from a restaurant
         $sql = "SELECT R.Rname, I.Iname AS ItemName, I.Price AS MaxPrice
         FROM Restaurant R
         JOIN Items I ON R.ID = I.RID
@@ -264,6 +211,8 @@ public function popFundsTable($localID){
     
     public function popSearch($searchTerm, $restaurantName) {
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+
+        //search the database fore selected item
         $sql = "SELECT Items.*
             FROM Items
             INNER JOIN Restaurant ON Items.RID = Restaurant.ID
@@ -275,9 +224,11 @@ public function popFundsTable($localID){
         // Initialize $searchResults as an empty array
         $searchResult = array("First");
 
+        //Flag used to clear the item listing
         if($_GET['Clear'] == 5){
             $_SESSION['search'] = NULL;
         }
+        //save values to session
         if(isset($_SESSION['search'])){
             $searchResult = $_SESSION['search'];
         }
@@ -290,7 +241,7 @@ public function popFundsTable($localID){
 
 
         if ($result->num_rows > 0) {
-
+            //Add Items placeholder table for Selected Listing
             $sql = "INSERT INTO building_my_order (UID, Rname, Iname, Quant, Decript, Price) VALUES(
                 '{$conn->real_escape_string($_SESSION['uid'])}',
                 '{$conn->real_escape_string($restaurantName)}',
@@ -302,6 +253,7 @@ public function popFundsTable($localID){
             try {
                 $conn->query($sql);
             } catch (\Throwable $th) {
+                //update quantities of selected items in listing
                 $sql = "UPDATE building_my_order
                         SET Quant = Quant + 1
                         WHERE UID = '" . $_SESSION['uid'] . "' AND Rname = '" . $restaurantName . "' AND Iname = '" . $row['Iname'] . "'";
@@ -310,10 +262,12 @@ public function popFundsTable($localID){
             
         
         $quant[] = NULL;
-
+        
+        //save values in session
         if(isset($_SESSION['quant'])){
             $quant = $_SESSION['quant'];
         }
+        //Retrive Total quantity of Items in item listing
         foreach ($searchResult as $value){
             $sql = "SELECT Quant
                     FROM building_my_order
@@ -334,6 +288,7 @@ public function popFundsTable($localID){
         }
         $_SESSION['quant'] = $quant;
 
+        //retreive Item ID's
         $sql = "SELECT * FROM items AS I, Restaurant AS R WHERE I.RID = R.ID AND R.Rname = '" . $restaurantName . "'";
 
         $result = $conn->query($sql);
@@ -358,16 +313,18 @@ public function popFundsTable($localID){
         $conn->close();
     }
 }
-
+    //Generate an Order
     public function genOrder($restaurantName){
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
 
+        //assign a driver for the order
         $sql = "SELECT ID FROM driver ORDER BY RAND() LIMIT 1";
         $result = $conn->query($sql);
 
         $row = $result->fetch_assoc();
         $driver = $row['ID'];
 
+        //Retrive all items in item listing
         $sql = "SELECT * FROM building_my_order WHERE UID = '" . $_SESSION['uid'] . "'";
         $items = $conn->query($sql);
         $BUILDitems = array();
@@ -378,18 +335,22 @@ public function popFundsTable($localID){
 
         $totalPrice = 0;
 
+        //calculate total price
         while($row = $items->fetch_assoc()){
             $var = (double)$row['Price'] * (int)$rowp['Quant'];
             $totalPrice += $var;
-        }
+        }   
 
+        //Retrieve restaurant ID's
         $sql = "SELECT ID FROM restaurant WHERE Rname = '" . $restaurantName ."'";
         $result = $conn->query($sql);
         $row = $result->fetch_assoc();
         $RID = $row['ID'];
 
+        //Generate an reference ID for the order
         $newID = $this->createOrderID();
 
+        //Insert order record into database
         $sql = "INSERT INTO orders (ID, TotalPrice, RID, DID, UID) VALUES (
             '{$conn->real_escape_string($newID)}',
             '{$conn->real_escape_string($totalPrice)}',
@@ -403,13 +364,7 @@ public function popFundsTable($localID){
             echo $conn->error;
         }
 
-        $sql = "SELECT ID FROM orders
-                WHERE TotalPrice = '" . $totalPrice . "' AND RID = '" . $RID . "' AND DID = '" . $driver . "' AND UID = '" . $_SESSION['uid'] . "'";
-        
-        $result = $conn->query($sql);
-        $row = $result->fetch_assoc();
-        $OID = $row['ID'];
-
+        //create references to restaurant items
         $sql = "SELECT * FROM items WHERE RID = '" . $RID . "'";
 
         $items = $conn->query($sql);
@@ -425,14 +380,19 @@ public function popFundsTable($localID){
         }
 
         $i = 0;
+        //insert item references to the Order
         foreach($BUILDitems as $BI){
             $sql = "INSERT INTO O_Items (O_ID, Item_ID, Quant) VALUES (
-                '{$conn->real_escape_string($OID)}',
+                '{$conn->real_escape_string($newID)}',
                 '{$conn->real_escape_string($IID[$i])}',
                 '{$conn->real_escape_string($BI['Quant'])}')";
             $conn->query($sql);
             $i++;
         }
+
+        $_SESSION['search'] = NULL;
+        $_SESSION['quant'] = NULL;    
+        hearder("Location: restaurantDetails.php");           
     }
 
     private function createOrderID(){

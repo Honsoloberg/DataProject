@@ -6,9 +6,11 @@ class Mpopulate extends config{
 
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
 
+        //Query all restaurant names
         $sql = "SELECT Rname FROM restaurant";
         $result = $conn->query($sql);
 
+        //Generate buttons to control Restaurant specific views
         if ($result->num_rows > 0) {
             echo "<form method='get' action='restaurantDetails.php'>";
 
@@ -32,6 +34,7 @@ class Mpopulate extends config{
     public function popWait(){
         $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
 
+        //Query the number of orders that each restaurant has in progress
         $sql = "SELECT r.Rname AS RestaurantName, COUNT(o.ID) AS OrderCount, AVG(o.TotalPrice) AS AvgTotalPrice
         FROM Orders o
         JOIN Restaurant r ON o.RID = r.ID
@@ -77,6 +80,8 @@ class Mpopulate extends config{
     // Query 2) Uses nested queries with the ANY or ALL operator and uses a GROUP BY, to show user top prices at all restaurants 
  public function popTopList(){
     $conn = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
+
+    //Query the most expensive items from all restaurants
     $sql = "SELECT R.Rname, I.Iname, I.Price, I.Decript
         FROM Restaurant R
         JOIN Items I ON R.ID = I.RID

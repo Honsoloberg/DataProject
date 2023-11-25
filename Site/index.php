@@ -1,5 +1,7 @@
 <?php
 include 'dlogin.php';
+
+//Create object to link functionality
 $account = new dlogin();
 if(!empty($_POST)){
     $account->login();
@@ -38,6 +40,7 @@ if(!empty($_POST)){
                 <p id="usererror" style="text-color: red;"></p>
             
                 <?php
+                //Error message displayed if the credentials entered are incorrect
                 if(!empty($_POST)){
                     if($_SESSION["err"]){
                         echo '<script type="text/javascript"> document.getElementById("usererror").innerHTML = "Username or Password is not correct." </script>';

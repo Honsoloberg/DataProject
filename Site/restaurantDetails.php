@@ -1,9 +1,12 @@
 <?php
 include ("restaurantDetailsPopulate.php");
+//Start Session to utilize Sesstion variables
 session_start();
-$pop = new rDetailsPop();
 
+//Create objects to link logic for the current Restaurant view
+$pop = new rDetailsPop();
 $config = new Config();
+
 $conn = new mysqli($config->dbhost, $config->dbuser, $config->dbpass, $config->dbname);
 
 // Check the connection
@@ -15,7 +18,7 @@ if(!isset($_SESSION['style'])){
     $_SESSION['style'] = $_GET['Rname'];
 }
 
-
+//Determines which restaurant view  should be generated
 switch ($_SESSION['style']) {
     case "Starbucks":
         $restaurantName = "Starbucks";
@@ -85,6 +88,7 @@ switch ($_SESSION['style']) {
     ?>
     </div>
     <?php
+            //Display customized message to the user
             if (!empty($_SESSION["uname"])) {
                 echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, " . $_SESSION["uname"] . "</h3>";
             } else {
@@ -105,7 +109,10 @@ switch ($_SESSION['style']) {
     <?php if (isset($_POST['get_all_items'])) : ?>
         <h2 style="text-align:center;">All Available Items</h2> 
         <!--Query 8-->
-        <?php $pop->popAllItems($restaurantName); ?>
+        <?php
+        //Display all items for the current restaurant view 
+        $pop->popAllItems($restaurantName); 
+        ?>
     <?php else : ?>
         <form method="post" action="">
             <input type="hidden" name="get_all_items" value="1">
@@ -132,6 +139,7 @@ switch ($_SESSION['style']) {
     if (isset($_POST['compare_restaurants'])) {
         $restaurantName1 = $restaurantName;
         $restaurantName2 = $_POST['restaurant'];
+        //Generates list of restaurants to compare items
         $pop->popCompareList($restaurantName1, $restaurantName2);
     }
     ?>
@@ -142,7 +150,10 @@ switch ($_SESSION['style']) {
     <!--Query 9-->
     <?php if (isset($_POST['get_most_expensive'])) : ?>
         <h2 style="text-align:center;">Most Expensive Item</h2>
-        <?php $pop->popMostExpensive($restaurantName); ?>
+        <?php 
+        //Find the most expensive item for the current restaurant view
+        $pop->popMostExpensive($restaurantName); 
+        ?>
     <?php else : ?>
         <form method="post" action="">
             <input type="hidden" name="get_most_expensive" value="1">
@@ -156,7 +167,10 @@ switch ($_SESSION['style']) {
     <!--Query 10-->
     <?php if (isset($_POST['get_least_expensive'])) : ?>
         <h2 style="text-align:center;">Least Expensive Item</h2>
-        <?php $pop->popLeastExpensive($restaurantName); ?>
+        <?php
+        //Find the most expensive item for the curent restaurant view 
+        $pop->popLeastExpensive($restaurantName); 
+        ?>
     <?php else : ?>
         <form method="post" action="">
             <input type="hidden" name="get_least_expensive" value="1">
@@ -168,6 +182,7 @@ switch ($_SESSION['style']) {
     
     <div>
     <br>
+    <!--Used to add items to the current item listing-->
     <form method="get" style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
         <label for="search">Search By Keyword:</label>
         <input type='hidden' name="style" value= "<?php echo $style ?>">
@@ -176,7 +191,8 @@ switch ($_SESSION['style']) {
         <button type="submit">Search</button> 
     </form>
     </div>
-    <div>
+    <div> 
+        <!--Clear all items in the listing-->
         <form method='get' style='margin: 0 auto; text-align: center; border-collapse: collapse; width: 30%; border: 1px solid black;'>
         <input type='hidden' name='style' value= '<?php echo $style ?>'>
         <input type='hidden' name='Clear' value='5'>
@@ -195,6 +211,7 @@ switch ($_SESSION['style']) {
             </thead>
             <tbody>
             <?php
+                //When the Search button is pressed the selected item is displayed to the screen
                 if (isset($_GET['query']) && $_GET['query'] != "") {
                     $searchTerm = $_GET['query'];
                     $searchTerm = $conn->real_escape_string($searchTerm);
@@ -204,6 +221,7 @@ switch ($_SESSION['style']) {
             </tbody>
     </table>
     <?php
+        //When the Complete Order button is pressed an order is generated
         if(isset($_POST['OrderGEN'])){
             $pop->genOrder($restaurantName);
         }
@@ -218,7 +236,10 @@ switch ($_SESSION['style']) {
     <br>
     <?php if (isset($_POST['get_rest_address'])) : ?>
         <h2 style="text-align:center;"></h2>
-        <?php $pop->popRestAddress($restaurantName); ?>
+        <?php
+        //Display the Address of the restaurant in the current view 
+        $pop->popRestAddress($restaurantName); 
+        ?>
     <?php else : ?>
         <form method="post" action="">
             <button type="submit" name="get_rest_address">Get Restaurant Address</button>

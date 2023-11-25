@@ -2,7 +2,10 @@
     include("mainPopulate.php");
     include("clearOrder.php");
 
+    //Create session to utilize session variables
     session_start();
+
+    //Create objects to link functionality
     $clear = new clearOrder();
     $clear->clearOrder();
 
@@ -14,7 +17,7 @@
     if(isset($_SESSION['style'])){
         $_SESSION['style'] = NULL;
     }
-
+    //Objects^^
 
 ?>
 <!DOCTYPE html>
@@ -29,6 +32,7 @@
         <img src="Food_Ferry.png" alt="Food Ferry" width="175" height="210" style="display:block;margin-left:auto;margin-right:auto;">
 
         <?php
+        //Generate customized message for user
         if (!empty($_SESSION["uname"])) {
             echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, " . $_SESSION["uname"] . "</h3>";
         } else {
@@ -49,6 +53,7 @@
     <div>
         <h2 style="text-align:center;">Nearby Restaurants</h2>
         <?php
+            //Calls function to populate Nearby Restaurants
             $pop->populate();
         ?>        
     </div>
@@ -56,6 +61,7 @@
     <div>
         <h2 style="text-align:center;">Restaurant Workload</h2>
         <?php
+            //Calls function to populate the Workload table
             $pop->popWait();
         ?>
     </div>
@@ -64,7 +70,10 @@
     <?php if (isset($_POST['get_top_list'])) : ?>
         <h2 style="text-align:center;">Feeling Frivolous?</h2>
         <!--Query 2-->
-        <?php $pop->popTopList(); ?>
+        <?php
+        //Calls function select all The most expensive items 
+        $pop->popTopList(); 
+        ?>
     <?php else : ?>
         <form method="post" action="">
             <input type="hidden" name="get_top_list" value="1">

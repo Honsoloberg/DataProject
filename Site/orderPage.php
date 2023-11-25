@@ -1,7 +1,9 @@
 <?php
 include("order.php");
+//Create session to utilize session variables
 session_start();
 
+//Create object to link functionality
 $order = new order();
 ?>
 
@@ -18,6 +20,7 @@ $order = new order();
         <img src="Food_Ferry.png" alt="Food Ferry" width="175" height="210" style="display:block;margin-left:auto;margin-right:auto;">
 
         <?php
+            //Generates customised message for user
             if (!empty($_SESSION["uname"])) {
                 echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, " . $_SESSION["uname"] . "</h3>";
             } else {
@@ -38,6 +41,7 @@ $order = new order();
 
     <h3 style='text-align:center;padding-bottom:20px;'>Orders</h3>
     <?php
+        //Calls function to cancel orders
         if(isset($_POST['order'])){
             $order->cancel($_POST['order']);
         }
@@ -52,6 +56,7 @@ $order = new order();
             <th>Drivers Plate</th>
             <th>Cancellation</th>
             <?php
+                //calls funciton to populate orders table
                 $order->populate();
             ?>
         </tr>

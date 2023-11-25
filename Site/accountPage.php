@@ -1,7 +1,10 @@
 <?php
 include("account.php");
 
+//Start sesstion to utilize Session variables
 session_start();
+
+//Create object with page functionality
 $account = new accountInfo();
 $account->pullInitial();
 
@@ -20,6 +23,7 @@ $account->pullInitial();
         <img src="Food_Ferry.png" alt="Food Ferry" width="175" height="210" style="display:block;margin-left:auto;margin-right:auto;">
 
         <?php
+            //Display a customized welcome message to the user
             if (!empty($_SESSION["uname"])) {
                 echo "<h3 style='text-align:center;padding-bottom:30px'> Welcome, " . $_SESSION["uname"] . "</h3>";
             } else {
@@ -40,6 +44,7 @@ $account->pullInitial();
         <h3 style="padding-bottom:10px;text-align:center;">Funds:</h3>
 
         <?php
+            //if the add button is pressed the addFunds function is executed
             if(isset($_POST['funds'])){
                 $account->addFunds();
                 unset($_POST['funds']);

@@ -1,5 +1,7 @@
 ﻿<?php
 include 'dlogin.php';
+
+//Create object to link functionality
 $account = new dlogin();
 if(!empty($_POST)){
     $account->createUser();
@@ -25,7 +27,7 @@ if(!empty($_POST)){
     <div class="mainContainer">
 
         <h1 style="text-align: center;">Create an Account</h1>
-
+        <!--Primary form to creates new users-->
         <form action="" method="post">
             <div class="imgContainer">
                 <img src="loginIcon.png" alt="Avatar" class="avatar">
